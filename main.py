@@ -102,7 +102,7 @@ while(1):
             
             chart_file = []
             chart_file.append(makeChart.draw_stock_chart(stock_df,RSS_info[3],feed_num))
-            chart_file.append(makeChart.draw_comparison_chart("계약 규모", RSS_info[3], "최근 매출액", "이번계약",
+            chart_file.append(makeChart.draw_comparison_chart("계약 규모", feed_num, "최근 매출액", "이번계약",
                                                         DART_preprocess_df[DART_preprocess_df.index.str.contains('최근')][0],
                                                         DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0]))
 
