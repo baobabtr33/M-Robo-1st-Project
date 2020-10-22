@@ -33,7 +33,7 @@ def draw_stock_chart(df, corpname, filing_num):
     return file_save
 
 # TODO: Bar 옆에 label 붙이기
-def comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1_num, comp2_num):
+def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1_num, comp2_num):
     """
     비교 차트 생성, 비교 차트 주소 반환.
 
