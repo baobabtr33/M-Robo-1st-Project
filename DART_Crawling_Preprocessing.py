@@ -20,7 +20,7 @@ def dart_crawling(my_driver_path, url):
         url : 공시 url을 넣어주세요
 
     return:
-        table_df : 공시 table 내용을 가지고 옴
+        DART_df : 공시 table 내용을 가지고 옴
     """
     # 크롬드라이버 경로 설정
     current_path = os.getcwd() #현재 경로 저장
@@ -50,30 +50,30 @@ def dart_crawling(my_driver_path, url):
     #table html 불러오기
     table_html = html[start_idx: end_idx]
     html_df = pd.read_html(table_html)
-    table_df = html_df[0]
+    DART_df = html_df[0]
 
-    return table_df
+    return DART_df
 
 
-def dart_preprocess(table_df):
-    print(table_df)
+def dart_preprocess(DART_df):
+    print(DART_df)
     """
     가지고온 table에서 필요한 정보만 추출해내는 함수
 
     params:
-        table_df: 크롤링하여 가지고온 데이터프레임 형식의 공시
+        DART_df: 크롤링하여 가지고온 데이터프레임 형식의 공시
 
     return:
-        info_df : 공시 table 중 필요한 내용만 시리즈 형식으로 추출.
+        DART_preprocess : 공시 table 중 필요한 내용만 시리즈 형식으로 추출.
     """
     #공시 소제목과 공시 내용만 추출함.
-    table_df.columns = ['공시대제목', '공시소제목', '공시내용', '공시내용2(같은내용)']
-    idx= table_df[table_df['공시소제목'].str.contains("종료일")].index[0] #종료일 이후는 안 쓴다.
-    info_df = table_df.iloc[:idx+1,  1:3]
-    info_df.set_index('공시소제목', inplace= True)
+    DART_df.columns = ['공시대제목', '공시소제목', '공시내용', '공시내용2(같은내용)']
+    idx= DART_df[DART_df['공시소제목'].str.contains("종료일")].index[0] #종료일 이후는 안 쓴다.
+    DART_preprocess = DART_df.iloc[:idx+1,  1:3]
+    DART_preprocess.set_index('공시소제목', inplace= True)
 
     #series로 바꾸기
-    info_df = pd.Series(info_df['공시내용'])
+    DART_preprocess = pd.Series(DART_preprocess['공시내용'])
 
 
-    return info_df
+    return DART_preprocess
