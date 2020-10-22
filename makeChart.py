@@ -62,12 +62,12 @@ def comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1_num,
     bars = plt.barh(y_pos, x_axis, height = 0.5)
     font_path = 'data/kor_font/NanumBarunGothic.ttf'
     fontprop = fm.FontProperties(fname=font_path, size=10)
-
     plt.title('단위 : 억 원', loc='right', fontsize = 10, fontproperties = fontprop)
     plt.title(chart_title, fontproperties = fontprop, fontsize = 15)
     # Create names on the y-axis
     plt.yticks(y_pos, y_axis)
-
+    
+    #save
     file_save = 'db/chart/'+ filing_num + '-bar'
     plt.savefig(file_save, bbox_inches='tight')
 
