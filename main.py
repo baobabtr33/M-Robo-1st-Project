@@ -121,6 +121,7 @@ while(1):
             print()
             print(final_article)
 
+            Sending_Email.sendMail('tndhks3837@gmail.com','stevekim0131@naver.com',final_article, chart_file)
 
             print()
             print("=========================END=========================")
