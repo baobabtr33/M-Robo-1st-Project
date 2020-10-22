@@ -32,7 +32,7 @@ def draw_stock_chart(df, corpname, filing_num):
     plt.title(corpname + ", 최근 3개월",fontproperties=fontprop, loc = "right")
     plt.grid(True) # 그리드
     plt.xticks(series_df.index[::7],series_df.index[::7], rotation=45, ha="right")  #ha 로 tick에 맞춘다. / 7일에 한 번 tick label
-    file_save = 'db/chart/'+ filing_num + '-chart'
+    file_save = 'db/chart/'+ filing_num + '-chart.png'
     plt.savefig(file_save, bbox_inches='tight')
 
     #erase
@@ -77,7 +77,7 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
     plt.yticks(y_pos, y_axis, fontproperties = fontprop)
     
     #save
-    file_save = 'db/chart/'+ filing_num + '-bar'
+    file_save = 'db/chart/'+ filing_num + '-bar.png'
     plt.savefig(file_save, bbox_inches='tight')
     
     #erase
