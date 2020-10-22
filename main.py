@@ -91,8 +91,9 @@ while(1):
 
             feed_num = RSS_info[1].split('rcpNo=')[1]
             print("FEED NUm" + feed_num)
-
+            stock_df = naverFinance.crawlStock(str(corpCode))
             print(stock_df)
+            
             print("+++++++++++++++ WEB CRAWL +++++++++++++++")
             DART_df = DART_Crawling_Preprocessing.dart_crawling(my_driver_path, RSS_info[1])
             DART_preprocess_df = DART_Crawling_Preprocessing.dart_preprocess(DART_df)
