@@ -29,7 +29,7 @@ def sendMail(my_email, recipient_email, title, article, pngfiles):
     msg.attach(img)
     
     #
-    msg.attach(MIMEText(article, _subtype='html', _charset='utf-8')) # 기사내용
+    msg.attach(MIMEText(article)) # 기사내용
     
     #이메일 - bar 차트
     fp = open(pngfiles[1], 'rb')
