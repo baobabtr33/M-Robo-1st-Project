@@ -35,6 +35,9 @@ def draw_stock_chart(df, corpname, filing_num):
     file_save = 'db/chart/'+ filing_num + '-chart'
     plt.savefig(file_save, bbox_inches='tight')
 
+    #erase
+    plt.clf()
+
     return file_save
 
 # TODO: Bar 옆에 label 붙이기
@@ -75,9 +78,9 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
     
     #save
     file_save = 'db/chart/'+ filing_num + '-bar'
+    plt.savefig(file_save, bbox_inches='tight')
     
     #erase
     plt.clf()
-    plt.savefig(file_save, bbox_inches='tight')
 
     return file_save
