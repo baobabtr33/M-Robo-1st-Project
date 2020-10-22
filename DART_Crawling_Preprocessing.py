@@ -64,16 +64,16 @@ def dart_preprocess(DART_df):
         DART_df: 크롤링하여 가지고온 데이터프레임 형식의 공시
 
     return:
-        DART_preprocess : 공시 table 중 필요한 내용만 시리즈 형식으로 추출.
+        DART_preprocess_df : 공시 table 중 필요한 내용만 시리즈 형식으로 추출.
     """
     #공시 소제목과 공시 내용만 추출함.
     DART_df.columns = ['공시대제목', '공시소제목', '공시내용', '공시내용2(같은내용)']
     idx= DART_df[DART_df['공시소제목'].str.contains("종료일")].index[0] #종료일 이후는 안 쓴다.
-    DART_preprocess = DART_df.iloc[:idx+1,  1:3]
-    DART_preprocess.set_index('공시소제목', inplace= True)
+    DART_preprocess_df = DART_df.iloc[:idx+1,  1:3]
+    DART_preprocess_df.set_index('공시소제목', inplace= True)
 
     #series로 바꾸기
-    DART_preprocess = pd.Series(DART_preprocess['공시내용'])
+    DART_preprocess_df = pd.Series(DART_preprocess_df['공시내용'])
 
 
-    return DART_preprocess
+    return DART_preprocess_df
