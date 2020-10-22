@@ -5,6 +5,7 @@ import naverFinance
 import DART_Crawling_Preprocessing
 import makeChart
 import Write_Article
+import Sending_Email
 from dateutil.parser import parse
 from datetime import datetime, timedelta
 
@@ -26,7 +27,7 @@ def new_rss(date_tracker):
     fp = feedparser.parse(url)
     ret = []
     #
-    # ret.append(('단일판매ㆍ공급계약체결','http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201020800165', datetime.today(),'우원개발'))
+    ret.append(('단일판매ㆍ공급계약체결','http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201020800165', datetime.today(),'우원개발'))
 
     # entry 가장 최근 공시가 위, 내림차순
     for e in fp.entries:
@@ -121,7 +122,7 @@ while(1):
             print()
             print(final_article)
 
-            Sending_Email.sendMail('tndhks3837@gmail.com','stevekim0131@naver.com',final_article, chart_file)
+            Sending_Email.sendMail('tndhks3837@gmail.com','stevekim0131@naver.com',title,final_article, chart_file)
 
             print()
             print("=========================END=========================")
