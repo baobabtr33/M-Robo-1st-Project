@@ -32,19 +32,19 @@ def convert_number(num):
 #제목 함수
 # 기업명 계약상대명과(와) 계약규모원 계약체결
 
-def Title(info_df, RSS_info):
+def Title(DART_preprocess_df, RSS_info):
     """
     단일 공급 계약 체결 기사의 제목
     params :
-        info_df : 공시 내용 table  (series)
+        DART_preprocess_df : 공시 내용 table  (series)
         RSS_info : RSS에서 가져온 tuble 형식 데이터
     return :
         title : 기사 제목
     """
     corp = RSS_info[3] #회사명
-    print(info_df)
-    partner = info_df[info_df.index.str.contains('계약상대')][0] #계약상대 회사명
-    bf_contract_price = info_df[info_df.index.str.contains('계약금액')][0] #공시, 자율공시 둘다 첫번째 인덱스가 계약금액을 가지고 있다.
+    print(DART_preprocess_df)
+    partner = DART_preprocess_df[DART_preprocess_df.index.str.contains('계약상대')][0] #계약상대 회사명
+    bf_contract_price = DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0] #공시, 자율공시 둘다 첫번째 인덱스가 계약금액을 가지고 있다.
     contract_price = convert_number(bf_contract_price) #계약금액 변환
 
     title = corp + ' ' + hgtk.josa.attach(partner, hgtk.josa.GWA_WA) + ' ' +  contract_price +'원' + ' 계약체결'
@@ -53,12 +53,12 @@ def Title(info_df, RSS_info):
 
 #문장 생성
 # 1, 3번째 문장
-def first_third_sentence(info_df, RSS_info):
+def first_third_sentence(DART_preprocess_df, RSS_info):
     """
     1st, 3rd 문장 생성
 
     params:
-        info_df : 공시 내용 table  (series)
+        DART_preprocess_df : 공시 내용 table  (series)
         RSS_info : RSS에서 가져온 tuple 형식 데이터
 
     return :
@@ -66,11 +66,11 @@ def first_third_sentence(info_df, RSS_info):
     """
     # 필요한 내용
     corp = RSS_info[3] #기업명
-    partner = info_df[info_df.index.str.contains('계약상대')][0] #계약상대 회사명
-    bf_contract_price = info_df[info_df.index.str.contains('계약금액')][0] #공시, 자율공시 둘다 첫번째 인덱스가 계약금액을 가지고 있다.
+    partner = DART_preprocess_df[DART_preprocess_df.index.str.contains('계약상대')][0] #계약상대 회사명
+    bf_contract_price = DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0] #공시, 자율공시 둘다 첫번째 인덱스가 계약금액을 가지고 있다.
     contract_price = convert_number(bf_contract_price) #계약금액 변환
-    recent_sales = convert_number(info_df[info_df.index.str.contains('최근')][0]) #최근 매출액
-    diff = info_df[info_df.index.str.contains('대비')][0] # 매출액 대비
+    recent_sales = convert_number(DART_preprocess_df[DART_preprocess_df.index.str.contains('최근')][0]) #최근 매출액
+    diff = DART_preprocess_df[DART_preprocess_df.index.str.contains('대비')][0] # 매출액 대비
 
     #첫번째 문장
     first_sen = hgtk.josa.attach(corp, hgtk.josa.EUN_NEUN) + ' ' + hgtk.josa.attach(partner, hgtk.josa.GWA_WA) + ' ' + contract_price+'원' + ' 규모의 계약을 체결했다고 ' + str(RSS_info[2].day) + '일에 공시했다.'
@@ -81,19 +81,19 @@ def first_third_sentence(info_df, RSS_info):
     return first_sen, third_sen
 
 #두번째 문장
-def second_sentence(info_df):
+def second_sentence(DART_preprocess_df):
     """
     두번째 문장 생성 함수
         *시작일, 종료일 유무에 따라 달라짐
     params:
-        info_df : 공시 내용 table  (series)
+        DART_preprocess_df : 공시 내용 table  (series)
 
     return :
         second_sen : 두번째 문장
     """
     # 필요한 내용
-    contract_content = info_df[0] # 계약 내용
-    start_date = info_df['시작일'] ; end_date = info_df['종료일']
+    contract_content = DART_preprocess_df[0] # 계약 내용
+    start_date = DART_preprocess_df['시작일'] ; end_date = DART_preprocess_df['종료일']
 
     start_date_year = start_date[0:4] ; start_date_month = start_date[5:7] ; start_date_day = start_date[8:10]
     end_date_year = end_date[0:4] ; end_date_month = end_date[5:7] ; end_date_date = end_date[8:10]
