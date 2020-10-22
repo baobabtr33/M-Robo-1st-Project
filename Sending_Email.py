@@ -2,6 +2,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+import base64
 
 def sendMail(my_email, recipient_email, title, article, pngfiles):
     """
@@ -26,10 +27,11 @@ def sendMail(my_email, recipient_email, title, article, pngfiles):
     fp.close()
     # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
     img.add_header('Content-Disposition', 'chart', filename=pngfiles[0])
-    msg.attach(img)
+    msg.attach(base64.b64encode(img)) # encode to base64 (bytes)
     
-    #
-    msg.attach(MIMEText(article)) # 기사내용
+    # 이메일 - 기사 
+    text= MIMEText(article, , _charset='utf-8')
+    msg.attach(base64.b64encode(text)) # 기사내용
     
     #이메일 - bar 차트
     fp = open(pngfiles[1], 'rb')
@@ -37,7 +39,7 @@ def sendMail(my_email, recipient_email, title, article, pngfiles):
     fp.close()
     # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
     img.add_header('Content-Disposition', 'bar', filename=pngfiles[1])
-    msg.attach(img)
+    msg.attach(msg.attach(base64.b64encode(img)) # encode to base64 (bytes))
 
     # 이메일 제목
     msg['Subject'] = title
