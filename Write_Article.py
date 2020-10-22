@@ -6,30 +6,25 @@ import datetime
 def convert_number(num):
     """
     계약규모나 최근 매출액 등 큰 숫자값을 조/억/만 단위의 숫자로 변환해주는 함수
-
+    
     params :
         num : 숫자값(str)
-
+    
     return :
         result : 문자값(str)
     """
     result = ""
-
+    
     num = int(num)
 
     if num >= 1000000000000: # 1조
-        result += f"{int(num // 1000000000000):,}조"
-        num = num % 1000000000000
+        result = f"{int(num // 1000000000000):,}조"
     elif num >= 100000000: # 1억
-        result += f"{int(num // 100000000):,}억"
-        num = num % 100000000
+        result = f"{int(num // 100000000):,}억"
     elif num >= 10000: # 1만
-        result += f" {int(num // 10000):,}만"
-        num = num % 10000
+        result = f" {int(num // 10000):,}만"
     elif num >= 1: # 1
-        result += f" {int(num):,}"
-
-    result = result.strip() # 단위 변환된 값.
+        result = f" {int(num):,}"
 
     return result
 
