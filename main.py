@@ -103,16 +103,15 @@ while(1):
 
             # 제목
             title = Write_Article.Title(DART_preprocess_df, RSS_info)
+            print(title)
             # 기사 생성
             first_sen, third_sen = Write_Article.first_third_sentence(DART_preprocess_df, RSS_info)
-            second_sen = Write_Article.second_sentence(DART_preprocess_df)
-            final_sen = Write_Article.final_sentence(RSS_info, stock_df)
-            final_article = Write_Article.Article(first_sen, second_sen, third_sen, final_sen)
-
-            print(title)
             print(first_sen)
+            second_sen = Write_Article.second_sentence(DART_preprocess_df)
             print(second_sen)
+            final_sen = Write_Article.final_sentence(RSS_info, stock_df)
             print(final_sen)
+            final_article = Write_Article.Article(first_sen, second_sen, third_sen, final_sen)
             print()
             print(final_article)
 
