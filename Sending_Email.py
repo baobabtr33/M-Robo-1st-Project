@@ -3,13 +3,14 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
-def sendMail(my_email, recipient_email, msg, pngfiles):
+def sendMail(my_email, recipient_email, title, msg, pngfiles):
     """
     완성된 기사와 차트를 이메일로 보내는 함수
 
     params:
         my_email : 내 email 주소
         recipient_email : 받을 상대방의 email 주소
+        title : 기사 제목
         msg : 기사 제목 및 내용
         feed_num: 공시의 고유번호
     """
@@ -32,7 +33,7 @@ def sendMail(my_email, recipient_email, msg, pngfiles):
       msg.attach(img)
 
     # 이메일 제목
-    msg['Subject'] = '이메일 제목'
+    msg['Subject'] = title
 
     #Sending Email
     smtp.sendmail(my_email, recipient_email, msg.as_string())
