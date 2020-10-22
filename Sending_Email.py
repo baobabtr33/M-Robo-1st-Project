@@ -20,18 +20,24 @@ def sendMail(my_email, recipient_email, title, article, pngfiles):
     # 이메일 TEXT
     msg = MIMEMultipart()
     
-    msg.attach(MIMEText(article)) # 기사내용, 제목 등등
-
-    #이메일 IMAGE
-
-    filename = ['Chart', 'Bar']
-    for i in range(0,2):
-      fp = open(pngfiles[i], 'rb')
-      img = MIMEImage(fp.read())
-      fp.close()
-      # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
-      img.add_header('Content-Disposition', filename[i], filename=pngfiles[i])
-      msg.attach(img)
+    #이메일 - 3개월 주가 차트
+    fp = open(pngfiles[0], 'rb')
+    img = MIMEImage(fp.read())
+    fp.close()
+    # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
+    img.add_header('Content-Disposition', 'chart', filename=pngfiles[0])
+    msg.attach(img)
+    
+    #
+    msg.attach(MIMEText(article)) # 기사내용
+    
+    #이메일 - bar 차트
+    fp = open(pngfiles[1], 'rb')
+    img = MIMEImage(fp.read())
+    fp.close()
+    # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
+    img.add_header('Content-Disposition', 'bar', filename=pngfiles[1])
+    msg.attach(img)
 
     # 이메일 제목
     msg['Subject'] = title
