@@ -78,7 +78,7 @@ while(1):
     new_feed, date_tracker = new_rss(date_tracker)
     for RSS_info in new_feed:
         # 정정은 다루지 않는다, 자회사의 도, 자율공시도
-        if("단일판매ㆍ공급계약체결" in RSS_info[0] and not "자율공시" in RSS_info[0]):
+        if("단일판매ㆍ공급계약체결" in RSS_info[0] and not "정정" in RSS_info[0]):
             # new feed tuple
             # 0. title 1. link 2. datetime 3. creator
             print(RSS_info[0])
