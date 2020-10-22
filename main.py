@@ -91,8 +91,6 @@ while(1):
 
             feed_num = RSS_info[1].split('rcpNo=')[1]
             print("FEED NUm" + feed_num)
-            stock_df = naverFinance.crawlStock(str(corpCode))
-            chart_file = makeChart.draw_stock_chart(stock_df,RSS_info[3],feed_num)
 
             print(stock_df)
             print("+++++++++++++++ WEB CRAWL +++++++++++++++")
@@ -100,6 +98,13 @@ while(1):
             DART_preprocess_df = DART_Crawling_Preprocessing.dart_preprocess(DART_df)
             print(DART_preprocess_df)
             print("+++++++++++++++++Write Article++++++++++++++++++++")
+            
+            chart_file = []
+            chart_file.append(makeChart.draw_stock_chart(stock_df,RSS_info[3],feed_num))
+            chart_file.append(makeChart.draw_comparison_chart("계약 규모", RSS_info[3], "최근 매출액", "이번계약",
+                                                        DART_preprocess_df[DART_preprocess_df.index.str.contains('최근')][0],
+                                                        DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0]))
+
 
             # 제목
             title = Write_Article.Title(DART_preprocess_df, RSS_info)
