@@ -1,6 +1,5 @@
 import time
 import RSS
-import pandas as pd
 import naver_finance
 import DART_crawling_preprocessing
 import make_chart
@@ -16,24 +15,14 @@ from dateutil.parser import parse
 
 def main (argv):
     # initial Settings
-
-
-
     date_tracker = parse("Mon, 1 Jan 1000 00:00:01 GMT")
 
+    # get args
     argsparser = argparse.ArgumentParser()
     argsparser.add_argument('path', type=str,
                 help="Chrome Driver Path must be given")
-
     args = argsparser.parse_args()
     my_driver_path = args.path
-
-
-
-    # TEST DART Crawling
-    #DART_df = DART_Crawling_Preprocessing.dart_crawling(my_driver_path, "http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201013900126")
-    #DART_preprocess_df = DART_Crawling_Preprocessing.dart_preprocess(DART_df)
-    #print(DART_preprocess_df)
 
     # switch on and off 0 /1
     while(1):
