@@ -24,7 +24,7 @@ def dart_crawling(my_driver_path, url):
     """
     # 크롬드라이버 경로 설정
     current_path = os.getcwd() #현재 경로 저장
-    os.chdir(my_driver_path) #chromedriver가 있는 경로로 바꿔줌
+    os.chdir("/Users/KimJungHwan/Desktop/m-Robo/proj1") #chromedriver가 있는 경로로 바꿔줌
 
     driver = wd.Chrome(r'chromedriver') #chromedriver 불러오기
     os.chdir(current_path) # 원래 경로로 다시 바꾸기
@@ -42,6 +42,7 @@ def dart_crawling(my_driver_path, url):
     p = re.compile("<table")
     m = p.search(html)
     start_idx= m.start()
+
     #table 끝 index
     p = re.compile("</table>")
     m = p.search(html)
