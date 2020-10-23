@@ -108,45 +108,14 @@ while(1):
                                                         DART_preprocess_df[DART_preprocess_df.index.str.contains('최근')][0],
                                                         DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0]))
 
+            title, first_sen, second_sen, third_sen, final_sen = Write_Article.write_title_article(DART_preprocess_df, RSS_info, stock_df)
 
-            # 제목
-            title = Write_Article.Title(DART_preprocess_df, RSS_info)
-            print(title)
-            # 기사 생성
-            first_sen, third_sen = Write_Article.first_third_sentence(DART_preprocess_df, RSS_info)
-            print(first_sen)
-            second_sen = Write_Article.second_sentence(DART_preprocess_df)
-            print(second_sen)
-            final_sen = Write_Article.final_sentence(RSS_info, stock_df)
-            print(final_sen)
-
-            template = Template("""<html>
-                                        <head></head>
-                                        <body>
-                                            <img src="cid:chart"><br>
-                                            ${first_sen} <br>
-                                            ${second_sen} <br>
-                                            ${third_sen} <br>
-                                            ${final_sen} <br>
-                                            <img src="cid:bar"><br>
-                                        </body>
-                                    </html>""")
-            emailHTMLImageContent = Sending_Email.EmailHTMLImageContent(str_subject = title, str_image_file_name1= chart_file[0],
-                                                                        str_cid_name1 = 'chart',
-                                                                        str_image_file_name2 = chart_file[1],
-                                                                        str_cid_name2 = 'bar', template= template,
-                                                                        template_params = {'first_sen':first_sen,
-                                                                                           'second_sen': second_sen,
-                                                                                           'third_sen':third_sen,
-                                                                                           'final_sen':final_sen})
-
+            print("+++++++++++++++++Sending Email++++++++++++++++++++")
             str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
             str_to_email_addrs = ['swan3837@naver.com']  # 수신자리스트
+            Sending_Email.Sending_Final_Email(title, first_sen, second_sen, third_sen, final_sen, chart_file,
+                                              str_from_email_addr, str_to_email_addrs)
 
-            EmailSender = Sending_Email.EmailSender()
-            EmailSender.send_message(EmailHTMLImageContent = emailHTMLImageContent, str_from_email_addr = str_from_email_addr, str_to_email_addrs = str_to_email_addrs)
 
-            print()
-            print("=========================END=========================")
     print("WAITING...")
     time.sleep(60)
