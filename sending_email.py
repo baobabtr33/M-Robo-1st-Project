@@ -86,10 +86,11 @@ class EmailSender:
         del cc
 
 
-def Sending_Final_Email(title, first_sen, second_sen, third_sen, final_sen, chart_file, str_from_email_addr, str_to_email_addrs):
+def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen, chart_file, str_from_email_addr, str_to_email_addrs):
     """
     기사, 제목, 이미지를 받아와 이메일 보내는 함수
     params :
+        link : 공시 url
         title: 기사 제목(이메일 제목)
         first_sen: 첫 번째 문장
         second_sen: 두 번째 문장
@@ -109,6 +110,9 @@ def Sending_Final_Email(title, first_sen, second_sen, third_sen, final_sen, char
                                     ${second_sen} <br>
                                     ${third_sen} <br>
                                     ${final_sen} <br>
+                                    <a href= S{link}>
+                                    공시전문으로 이동
+                                    </a> <br>
                                     <img src="cid:bar"><br>
                                 </body>
                             </html>""")
@@ -117,7 +121,8 @@ def Sending_Final_Email(title, first_sen, second_sen, third_sen, final_sen, char
                                                 str_cid_name1='chart', str_image_file_name2=chart_file[1],
                                                 str_cid_name2='bar', template=template,
                                                 template_params= {'first_sen': first_sen, 'second_sen': second_sen,
-                                                'third_sen': third_sen, 'final_sen': final_sen} )
+                                                'third_sen': third_sen, 'final_sen': final_sen,
+                                                'link': link} )
 
     emailsender= EmailSender()
     emailsender.send_message(EmailHTMLImageContent=emailHTMLImageContent, str_from_email_addr=str_from_email_addr,
