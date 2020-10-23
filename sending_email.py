@@ -14,8 +14,10 @@ class EmailHTMLImageContent:
         """
         params :
             str_subject : 이메일 제목
-            str_image_file_name : 이미지 파일 (경로포함)
-            str_cid_name : 이미지가 들어갈 이름
+            str_image_file_name1 : 이미지 파일1 (경로포함)
+            str_cid_name1 : 이미지가 들어갈 이름1
+            str_image_file_name2 : 이미지 파일2 (경로포함)
+            str_cid_name2 : 이미지가 들어갈 이름2
             template : string.Template() 형태로 html 형성
             template_params : dict 형식으로 변수를 받음
         return :
