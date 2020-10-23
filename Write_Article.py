@@ -217,18 +217,3 @@ def final_sentence(RSS_info, stack_df):
     return final_sen
 
 
-# 최종 기사 생성
-def Article(first_sen, second_sen, third_sen, final_sen):
-    """
-    기사를 합쳐서 완성하는 함수
-
-    params :
-        first_sen, second_sen, third_sen, fianl_sen : 각각 1, 2, 3, 4번째 문장(str)
-
-    return :
-        final_article : 최종 기사
-    """
-
-    final_article = print(first_sen + '\n\n' + second_sen + '\n\n' + third_sen + '\n\n' + final_sen + '\n')
-
-    return final_article

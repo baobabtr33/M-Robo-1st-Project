@@ -1,49 +1,60 @@
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
+import os, copy
+import smtplib               # SMTP 라이브러리
+from string import Template # 문자열 템플릿 모듈을 위함.
 from email.mime.multipart import MIMEMultipart
-import base64
+from email.mime.text      import MIMEText
+from email.mime.image     import MIMEImage
 
-def sendMail(my_email, recipient_email, title, article, pngfiles):
-    """
-    완성된 기사와 차트를 이메일로 보내는 함수
 
-    params:
-        my_email : 내 email 주소
-        recipient_email : 받을 상대방의 email 주소
-        title : 기사 제목
-        article : 기사 제목 및 내용
-        feed_num: 공시의 고유번호
-    """
+class EmailHTMLImageContent:
+    """e메일에 담길 이미지가 포함된 컨텐츠"""
 
-    smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    smtp.login(my_email, 'cyuidhhqqepdqhmo') #나의 앱비밀번호
-    # 이메일 TEXT
-    msg = MIMEMultipart()
-    
-    #이메일 - 3개월 주가 차트
-    fp = open(pngfiles[0], 'rb')
-    img = MIMEImage(fp.read())
-    fp.close()
-    # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
-    img.add_header('Content-Disposition', 'chart', filename=pngfiles[0])
-    msg.attach(base64.b64encode(img)) # encode to base64 (bytes)
-    
-    # 이메일 - 기사 
-    text= MIMEText(article, , _charset='utf-8')
-    msg.attach(base64.b64encode(text)) # 기사내용
-    
-    #이메일 - bar 차트
-    fp = open(pngfiles[1], 'rb')
-    img = MIMEImage(fp.read())
-    fp.close()
-    # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
-    img.add_header('Content-Disposition', 'bar', filename=pngfiles[1])
-    msg.attach(msg.attach(base64.b64encode(img)) # encode to base64 (bytes))
+    def __init__(self, str_subject, str_image_file_name1, str_cid_name1, str_image_file_name2, str_cid_name2, template, template_params):
+        """이미지파일(str_image_file_name), 컨텐츠ID(str_cid_name)사용된 string template과 딕셔너리형 template_params받아 MIME 메시지를 만든다"""
+        assert isinstance(template,Template)
+        assert isinstance(template_params, dict)
+        self.msg = MIMEMultipart()
 
-    # 이메일 제목
-    msg['Subject'] = title
+        # e메일 제목을 설정한다
+        self.msg['Subject'] = str_subject  # e메일 제목을 설정한다
 
-    #Sending Email
-    smtp.sendmail(my_email, recipient_email, msg.as_string())
-    smtp.quit()
+        # e메일 본문을 설정한다
+        str_msg = template.safe_substitute(**template_params)  # ${변수} 치환하며 문자열 만든다
+        mime_msg = MIMEText(str_msg, 'html')  # MIME HTML 문자열을 만든다
+        self.msg.attach(mime_msg)
+
+        # e메일 본문에 주가차트 임베딩
+        assert template.template.find("cid:" + str_cid_name1) >= 0, 'template must have cid for embedded image.'
+        assert os.path.isfile(str_image_file_name1), 'image file does not exist.'
+        with open(str_image_file_name1, 'rb') as img_file:
+            mime_img = MIMEImage(img_file.read())
+            mime_img.add_header('Content-ID', '<' + str_cid_name1 + '>')
+        self.msg.attach(mime_img)
+
+        # e메일 본문에 바차트 임베딩
+        assert template.template.find("cid:" + str_cid_name2) >= 0, 'template must have cid for embedded image.'
+        assert os.path.isfile(str_image_file_name2), 'image file does not exist.'
+        with open(str_image_file_name2, 'rb') as img_file:
+            mime_img = MIMEImage(img_file.read())
+            mime_img.add_header('Content-ID', '<' + str_cid_name2 + '>')
+        self.msg.attach(mime_img)
+
+    def get_message(self, str_from_email_addr, str_to_eamil_addrs):
+        """발신자, 수신자리스트를 이용하여 보낼메시지를 만든다 """
+        mm = copy.deepcopy(self.msg)
+        mm['From'] = str_from_email_addr  # 발신자
+        mm['To'] = ",".join(str_to_eamil_addrs)  # 수신자리스트
+        return mm
+
+class EmailSender:
+    """e메일 발송자"""
+
+    def __init__(self):
+        self.ss = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        self.ss.login('tndhks3837@gmail.com', 'cyuidhhqqepdqhmo')  # 나의 앱비밀번호
+
+    def send_message(self, EmailHTMLImageContent, str_from_email_addr, str_to_email_addrs):
+        """e메일을 발송한다 """
+        cc = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
+        self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
+        del cc

@@ -7,6 +7,8 @@ import makeChart
 import Write_Article
 from dateutil.parser import parse
 from datetime import datetime, timedelta
+import Sending_Email
+from string import Template # 문자열 템플릿 모듈을 위함.
 
 
 
@@ -26,7 +28,7 @@ def new_rss(date_tracker):
     fp = feedparser.parse(url)
     ret = []
     #
-    # ret.append(('단일판매ㆍ공급계약체결','http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201020800165', datetime.today(),'우원개발'))
+    ret.append(('단일판매ㆍ공급계약체결','http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201020800165', datetime.today(),'우원개발'))
 
     # entry 가장 최근 공시가 위, 내림차순
     for e in fp.entries:
@@ -65,7 +67,7 @@ def corp_to_code(corpname):
 
 # initial Settings
 date_tracker = parse("Mon, 1 Jan 1000 00:00:01 GMT")
-my_driver_path = "/Users/KimJungHwan/Desktop/m-Robo/proj1"
+my_driver_path = 'C:\\Users\\swan3\\Downloads\\chromedriver_win32 (3)'
 
 
 # TEST DART Crawling
@@ -117,11 +119,32 @@ while(1):
             print(second_sen)
             final_sen = Write_Article.final_sentence(RSS_info, stock_df)
             print(final_sen)
-            final_article = Write_Article.Article(first_sen, second_sen, third_sen, final_sen)
-            print()
-            print(final_article)
 
-            Sending_Email.sendMail('tndhks3837@gmail.com','stevekim0131@naver.com',final_article, chart_file)
+            template = Template("""<html>
+                                        <head></head>
+                                        <body>
+                                            <img src="cid:chart"><br>
+                                            ${first_sen} <br>
+                                            ${second_sen} <br>
+                                            ${third_sen} <br>
+                                            ${final_sen} <br>
+                                            <img src="cid:bar"><br>
+                                        </body>
+                                    </html>""")
+            emailHTMLImageContent = Sending_Email.EmailHTMLImageContent(str_subject = title, str_image_file_name1= chart_file[0],
+                                                                        str_cid_name1 = 'chart',
+                                                                        str_image_file_name2 = chart_file[1],
+                                                                        str_cid_name2 = 'bar', template= template,
+                                                                        template_params = {'first_sen':first_sen,
+                                                                                           'second_sen': second_sen,
+                                                                                           'third_sen':third_sen,
+                                                                                           'final_sen':final_sen})
+
+            str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
+            str_to_email_addrs = ['swan3837@naver.com']  # 수신자리스트
+
+            EmailSender = Sending_Email.EmailSender()
+            EmailSender.send_message(EmailHTMLImageContent = emailHTMLImageContent, str_from_email_addr = str_from_email_addr, str_to_email_addrs = str_to_email_addrs)
 
             print()
             print("=========================END=========================")
