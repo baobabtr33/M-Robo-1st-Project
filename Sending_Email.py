@@ -4,7 +4,7 @@ from string import Template # 문자열 템플릿 모듈을 위함.
 from email.mime.multipart import MIMEMultipart
 from email.mime.text      import MIMEText
 from email.mime.image     import MIMEImage
-
+import Write_Article
 
 class EmailHTMLImageContent:
     """e메일에 담길 이미지가 포함된 컨텐츠"""
@@ -58,3 +58,30 @@ class EmailSender:
         cc = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
         self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
         del cc
+
+
+def Sending_Final_Email(title, first_sen, second_sen, third_sen, final_sen, chart_file, str_from_email_addr, str_to_email_addrs):
+
+    template = Template("""<html>
+                                <head></head>
+                                <body>
+                                    <img src="cid:chart"><br>
+                                    ${first_sen} <br>
+                                    ${second_sen} <br>
+                                    ${third_sen} <br>
+                                    ${final_sen} <br>
+                                    <img src="cid:bar"><br>
+                                </body>
+                            </html>""")
+
+    emailHTMLImageContent = EmailHTMLImageContent(str_subject=title, str_image_file_name1=chart_file[0],
+                                                str_cid_name1='chart', str_image_file_name2=chart_file[1],
+                                                str_cid_name2='bar', template=template,
+                                                template_params= {'first_sen': first_sen, 'second_sen': second_sen,
+                                                'third_sen': third_sen, 'final_sen': final_sen} )
+
+    emailsender= EmailSender()
+    emailsender.send_message(EmailHTMLImageContent=emailHTMLImageContent, str_from_email_addr=str_from_email_addr,
+                             str_to_email_addrs=str_to_email_addrs)
+
+    print('이메일 보내기 완료')
