@@ -31,7 +31,7 @@ def new_rss(date_tracker):
 
 
     #  TEST
-    print("Checking RSS: new feed : " + str(len(ret)))
+    print("Checking RSS - new feed(s) : " + str(len(ret)))
     #ret.append(('단일판매ㆍ공급계약체결','http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201013900126',datetime.today(),'엔씨소프트'))
     #ret.append(('단일판매ㆍ공급계약체결','https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201020900377',datetime.today(),'엔씨소프트'))
     # TEST

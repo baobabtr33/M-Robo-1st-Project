@@ -46,7 +46,7 @@ def get_pg_last(soup):
     return pg_last
 
 
-def crawlStock(corporation_code):
+def crawl_stock(corporation_code):
     """
     네이버 증권에서 종목의 주가 데이터를 가지고 온다.
 

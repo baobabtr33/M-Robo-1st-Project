@@ -127,5 +127,3 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
     emailsender= EmailSender()
     emailsender.send_message(EmailHTMLImageContent=emailHTMLImageContent, str_from_email_addr=str_from_email_addr,
                              str_to_email_addrs=str_to_email_addrs)
-
-    print('이메일 보내기 완료')

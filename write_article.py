@@ -42,7 +42,6 @@ def Title(DART_preprocess_df, RSS_info):
         title : 기사 제목
     """
     corp = RSS_info[3] #회사명
-    print(DART_preprocess_df)
     partner = DART_preprocess_df[DART_preprocess_df.index.str.contains('계약상대')][0] #계약상대 회사명
     bf_contract_price = DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0] #공시, 자율공시 둘다 첫번째 인덱스가 계약금액을 가지고 있다.
     contract_price = convert_number(bf_contract_price) #계약금액 변환
@@ -234,6 +233,5 @@ def write_title_article(DART_preprocess_df, RSS_info, stock_df):
     first_sen, third_sen = first_third_sentence(DART_preprocess_df, RSS_info)
     second_sen = second_sentence(DART_preprocess_df)
     final_sen = final_sentence(RSS_info, stock_df)
-    print('기사 생성 완료')
-    
+
     return title, first_sen, second_sen, third_sen, final_sen
