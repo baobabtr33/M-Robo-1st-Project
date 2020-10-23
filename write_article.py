@@ -216,4 +216,22 @@ def final_sentence(RSS_info, stack_df):
 
     return final_sen
 
-
+def write_title_article(DART_preprocess_df, RSS_info, stock_df):
+    """
+    기사와 제목을 생성하는 함수 
+    params: 기사 생성에 필요한 데이터
+        DART_preprocess_df : 전처리 완료된 DART 공시
+        RSS_info : RSS에서 가져온 공시명, 기업명 등의 정보들 
+        stock_df: 네이버 금융에서 크롤링 해온 데이터
+    return : 
+        제목, 각각의 기사
+    """
+    # 제목
+    title = Title(DART_preprocess_df, RSS_info)
+    # 기사 생성
+    first_sen, third_sen = first_third_sentence(DART_preprocess_df, RSS_info)
+    second_sen = second_sentence(DART_preprocess_df)
+    final_sen = final_sentence(RSS_info, stock_df)
+    print('기사 생성 완료')
+    
+    return title, first_sen, second_sen, third_sen, final_sen
