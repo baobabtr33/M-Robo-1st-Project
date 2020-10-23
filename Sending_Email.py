@@ -2,11 +2,12 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+import base64
+
 
 def sendMail(my_email, recipient_email, title, article, pngfiles):
     """
     완성된 기사와 차트를 이메일로 보내는 함수
-
     params:
         my_email : 내 email 주소
         recipient_email : 받을 상대방의 email 주소
@@ -16,32 +17,33 @@ def sendMail(my_email, recipient_email, title, article, pngfiles):
     """
 
     smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    smtp.login(my_email, 'cyuidhhqqepdqhmo') #나의 앱비밀번호
+    smtp.login(my_email, 'cyuidhhqqepdqhmo')  # 나의 앱비밀번호
     # 이메일 TEXT
     msg = MIMEMultipart()
-    
-    #이메일 - 3개월 주가 차트
+
+    # 이메일 - 3개월 주가 차트
     fp = open(pngfiles[0], 'rb')
     img = MIMEImage(fp.read())
     fp.close()
     # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
     img.add_header('Content-Disposition', 'chart', filename=pngfiles[0])
-    msg.attach(img)
-    
-    #
-    msg.attach(MIMEText(article)) # 기사내용
-    
-    #이메일 - bar 차트
+    msg.attach(base64.b64encode(img))  # encode to base64 (bytes)
+
+    # 이메일 - 기사
+    text = MIMEText(article, _charset = 'utf-8')
+    msg.attach(base64.b64encode(text))  # 기사내용
+
+    # 이메일 - bar 차트
     fp = open(pngfiles[1], 'rb')
     img = MIMEImage(fp.read())
     fp.close()
     # 첨부한 파일의 파일이름을 입력합니다. (이 구문이 없으면 noname으로 발송됩니다.)
     img.add_header('Content-Disposition', 'bar', filename=pngfiles[1])
-    msg.attach(img)
+    msg.attach(msg.attach(base64.b64encode(img))) # encode to base64 (bytes))
 
     # 이메일 제목
     msg['Subject'] = title
 
-    #Sending Email
+    # Sending Email
     smtp.sendmail(my_email, recipient_email, msg.as_string())
     smtp.quit()
