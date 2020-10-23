@@ -16,9 +16,6 @@ from dateutil.parser import parse
 
 def main (argv):
     # initial Settings
-
-
-
     date_tracker = parse("Mon, 1 Jan 1000 00:00:01 GMT")
 
     argsparser = argparse.ArgumentParser()
