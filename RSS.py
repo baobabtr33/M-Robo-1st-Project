@@ -20,6 +20,7 @@ def new_rss(date_tracker):
     fp = feedparser.parse(url)
     ret = []
 
+    # RSS에 공급계약체결이 없을 시,
     ret.append(('단일판매ㆍ공급계약체결','https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201020900377',datetime.today(),'엔씨소프트'))
 
     # entry 가장 최근 공시가 위, 내림차순
@@ -52,4 +53,5 @@ def corp_to_code(corpname):
     corporation = pd.read_csv('data/corporation_code.csv')
     code = str(corporation[corporation['회사명']==corpname]['종목코드'].values[0].item())
     code = '0'*(6-len(code)) + code
+
     return code

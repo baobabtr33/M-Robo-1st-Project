@@ -130,7 +130,7 @@ def test_ver(my_driver_path):
 
                 print("+++++++++++++++++Sending Email++++++++++++++++++++")
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
-                str_to_email_addrs = ['tndhks3837@gmail.com'', 'stevekim0131@naver.com']  # 수신자리스트
+                str_to_email_addrs = ['tndhks3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
                 sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
                                                   chart_file,
                                                   str_from_email_addr, str_to_email_addrs)
