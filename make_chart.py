@@ -40,7 +40,6 @@ def draw_stock_chart(df, corpname, filing_num):
 
     return file_save
 
-# TODO: Bar 옆에 label 붙이기
 def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1_num, comp2_num):
     """
     비교 차트 생성, 비교 차트 주소 반환.
@@ -74,8 +73,11 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
     plt.title(chart_title, fontproperties = fontprop, fontsize = 15)
 
     # Create labels on the y-axis
-    plt.yticks(y_pos, y_axis, fontproperties = fontprop)
-    
+    plt.yticks(y_pos, y_axis)
+
+    locs, labels = plt.yticks()
+    for label in labels:
+        label.set_fontproperties(fontprop)
     #save
     file_save = 'db/chart/'+ filing_num + '-bar.png'
     plt.savefig(file_save, bbox_inches='tight')
