@@ -22,26 +22,6 @@ def main(argv):
                             help="Need to choose \"test\" or  \"service\" for the project")
     args = arg_parser.parse_args()
 
-    global project_logger
-    project_logger = logging.getLogger("proj1")
-    project_logger.setLevel(logging.INFO)
-
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    stream_hander = logging.StreamHandler()
-    stream_hander.setFormatter(formatter)
-    project_logger.addHandler(stream_hander)
-
-    file_handler = logging.FileHandler('proj1.log')
-    project_logger.addHandler(file_handler)
-
-    project_logger.info("server start!!!")
-
-
-
-
-
-
     if args.state == "test":
         test_ver(args.path)
     elif args.state == "service":
@@ -162,4 +142,20 @@ def test_ver(my_driver_path):
 
 
 if __name__ == "__main__":
+    """
+    # set logger
+    global project_logger
+
+    project_logger = logging.getLogger("proj1")
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    stream_hander = logging.StreamHandler()
+    stream_hander.setFormatter(formatter)
+    project_logger.addHandler(stream_hander)
+
+    file_handler = logging.FileHandler('proj1.log')
+    project_logger.addHandler(file_handler)
+
+    project_logger.info("server start!!!")
+    """
     main(sys.argv[1:])
