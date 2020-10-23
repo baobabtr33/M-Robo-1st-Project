@@ -9,4 +9,6 @@ Project 실행 방법:
 <code> $ python main.py chrome_driver_path status</code>
 
 chrome_driver_path 를 인자로
-status 는 test 또는 service
+status 는 test 또는 service를 인자로
+
+chrome driver는 사양에 맞춰서 다운받아 주세여!
