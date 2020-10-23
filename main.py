@@ -8,6 +8,7 @@ import write_article
 import sending_email
 import sys
 import argparse
+import logging
 
 from dateutil.parser import parse
 
@@ -19,8 +20,27 @@ def main(argv):
                             help="Chrome Driver Path must be given")
     arg_parser.add_argument('state', type=str,
                             help="Need to choose \"test\" or  \"service\" for the project")
-
     args = arg_parser.parse_args()
+
+    global project_logger
+    project_logger = logging.getLogger("proj1")
+    project_logger.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    stream_hander = logging.StreamHandler()
+    stream_hander.setFormatter(formatter)
+    project_logger.addHandler(stream_hander)
+
+    file_handler = logging.FileHandler('proj1.log')
+    project_logger.addHandler(file_handler)
+
+    project_logger.info("server start!!!")
+
+
+
+
+
 
     if args.state == "test":
         test_ver(args.path)
