@@ -7,10 +7,18 @@ from email.mime.image     import MIMEImage
 import Write_Article
 
 class EmailHTMLImageContent:
-    """e메일에 담길 이미지가 포함된 컨텐츠"""
 
     def __init__(self, str_subject, str_image_file_name1, str_cid_name1, str_image_file_name2, str_cid_name2, template, template_params):
-        """이미지파일(str_image_file_name), 컨텐츠ID(str_cid_name)사용된 string template과 딕셔너리형 template_params받아 MIME 메시지를 만든다"""
+        """
+        이메일에 이미지와 텍스트를 임베딩하는 함수
+        params :
+            str_subject : 이메일 제목
+            str_image_file_name1, str_image_file_name2 : 이미지 1,2 경로
+            str_cid_name1,str_cid_name2 : 메일에 첨부될 이미지 1,2 이름
+            template : html 생성시 사용될 문자열 템플릿
+            template_params : template 안에 들어갈 변수 지정 (dict 형식)
+        return : 이미지, 텍스트 임베딩
+        """
         assert isinstance(template,Template)
         assert isinstance(template_params, dict)
         self.msg = MIMEMultipart()
@@ -40,28 +48,46 @@ class EmailHTMLImageContent:
         self.msg.attach(mime_img)
 
     def get_message(self, str_from_email_addr, str_to_eamil_addrs):
-        """발신자, 수신자리스트를 이용하여 보낼메시지를 만든다 """
+        """
+        발신자, 수신자리스트를 이용하여 보낼메시지를 만든다
+        params :
+            str_from_email_addr: 발신자
+            str_to_eamil_addrs : 수신자 리스트
+        return :
+            mm : 발신자, 수신자 리스트
+        """
         mm = copy.deepcopy(self.msg)
-        mm['From'] = str_from_email_addr  # 발신자
-        mm['To'] = ",".join(str_to_eamil_addrs)  # 수신자리스트
+        mm['From'] = str_from_email_addr
+        mm['To'] = ",".join(str_to_eamil_addrs)
         return mm
 
 class EmailSender:
     """e메일 발송자"""
 
     def __init__(self):
+        """
+        이메일과 앱 비밀번호 설정
+        """
         self.ss = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         self.ss.login('tndhks3837@gmail.com', 'cyuidhhqqepdqhmo')  # 나의 앱비밀번호
 
     def send_message(self, EmailHTMLImageContent, str_from_email_addr, str_to_email_addrs):
-        """e메일을 발송한다 """
+        """
+        e메일을 발송한다
+        params:
+            EmailHTMLImageContent : 임베딩한 텍스트와 이미지
+            str_from_email_addr : 수신자
+            str_to_email_addrs : 발신자 리스트
+        """
         cc = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
         self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
         del cc
 
 
 def Sending_Final_Email(title, first_sen, second_sen, third_sen, final_sen, chart_file, str_from_email_addr, str_to_email_addrs):
-
+    """
+    제목과 기사, 이미지를 불러와서 이메일로 보내는 함수
+    """
     template = Template("""<html>
                                 <head></head>
                                 <body>
