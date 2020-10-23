@@ -30,12 +30,7 @@ def new_rss(date_tracker):
         entry_tuple = (e.title, e.link, parse(e.published),e.author)
         ret.append(entry_tuple)
 
-
-    #  TEST
     print("Checking RSS - new feed(s) : " + str(len(ret)))
-    #ret.append(('단일판매ㆍ공급계약체결','http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201013900126',datetime.today(),'엔씨소프트'))
-    # TEST
-
     return ret, parse(fp.entries[0].published)
 
 
