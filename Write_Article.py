@@ -227,11 +227,11 @@ def write_title_article(DART_preprocess_df, RSS_info, stock_df):
         제목, 각각의 기사
     """
     # 제목
-    title = Write_Article.Title(DART_preprocess_df, RSS_info)
+    title = Title(DART_preprocess_df, RSS_info)
     # 기사 생성
-    first_sen, third_sen = Write_Article.first_third_sentence(DART_preprocess_df, RSS_info)
-    second_sen = Write_Article.second_sentence(DART_preprocess_df)
-    final_sen = Write_Article.final_sentence(RSS_info, stock_df)
+    first_sen, third_sen = first_third_sentence(DART_preprocess_df, RSS_info)
+    second_sen = second_sentence(DART_preprocess_df)
+    final_sen = final_sentence(RSS_info, stock_df)
     print('기사 생성 완료')
     
     return title, first_sen, second_sen, third_sen, final_sen
