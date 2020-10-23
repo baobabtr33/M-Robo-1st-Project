@@ -4,7 +4,6 @@ from string import Template # 문자열 템플릿 모듈을 위함.
 from email.mime.multipart import MIMEMultipart
 from email.mime.text      import MIMEText
 from email.mime.image     import MIMEImage
-import Write_Article
 
 class EmailHTMLImageContent:
     """e메일에 담길 이미지가 포함된 컨텐츠"""
