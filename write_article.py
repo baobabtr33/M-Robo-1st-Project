@@ -121,62 +121,64 @@ def second_sentence(DART_preprocess_df):
 
     return second_sen
 
-# 마지막 문
+# 마지막 문장
 ## 직전일 대비 변화량 : 상승, 하락, 변동 x 함수 만들기
-def inc_dec_ing(x):
+def inc_dec_ing(x, y):
     """
-    장 진행 중일 때 변화량에 따라 달라지는 함수
+    장 마감일 때 변화량에 따라 달라지는 함수
 
     params :
-        x: 직전거래일 대비 변화량 (%) (str)
+        x: 직전거래일 대비 변화량 (won)
+        y : 직전거래일 대비 변화량 (%)
 
     return :
         result :
-            1) 상승일 경우 : 변화량%) 상승이며
-            2) 하락일 경우 : 변화량%) 하락이며
+            1) 상승일 경우 : 변화량 원 (변화량%) 상승하며
+            2) 하락일 경우 : 변화량 원(변화량%) 하락하며
             3) 변동 없음 : 변동이 없으며
     """
     result = ''
-    if float(x) > 0 :
-        result = x + '%) 상승이며'
+    if float(x)  > 0 :
+        result = x + '원' + '(' + y + '%) 상승하며'
     elif float(x)  < 0:
-        result = x + '%) 하락이며'
+        result = x + '원' + '(' +  y + '%) 하락하며'
     elif float(x)  == 0:
         result = '변동이 없으며'
     return result
 
 
-def inc_dec_done(x):
+def inc_dec_done(x, y):
     """
     장 마감일 때 변화량에 따라 달라지는 함수
 
     params :
-        x: 직전거래일 대비 변화량 (%)
+        x: 직전거래일 대비 변화량 (won)
+        y : 직전거래일 대비 변화량 (%)
 
     return :
         result :
-            1) 상승일 경우 : 변화량%) 상승했다.
-            2) 하락일 경우 : 변화량%) 하락했다.
+            1) 상승일 경우 : 변화량 원 (변화량%) 상승했다.
+            2) 하락일 경우 :변화량 원(변화량%) 하락했다.
             3) 변동 없음 : 변동이 없다.
     """
     result = ''
     if float(x)  > 0 :
-        result = x + '%) 상승했다.'
+        result = x + '원' + '(' + y + '%) 상승했다.'
     elif float(x)  < 0:
-        result = x + '%) 하락했다.'
+        result = x + '원' + '(' +  y + '%) 하락했다.'
     elif float(x)  == 0:
         result = '변동이 없다.'
     return result
 
 # 마지막 문장
-def final_sentence(RSS_info, stack_df):
+def final_sentence(RSS_info, stock_df):
     """
     마지막 문장 생성 함수
         *장 마감 이전, 이후 / 직전거래일 대비 상승 하락 구분하여 생성
 
     params :
         RSS_info : RSS에서 가져온 tuple 형식 데이터
-        stack_df : 주가 데이터
+        stock_df : 주가 데이터
     return :
         final_sen : 마지막 문장 return
     """
@@ -184,21 +186,21 @@ def final_sentence(RSS_info, stack_df):
     corp = RSS_info[3] #기업명
 
     #장마감 전
-    stock_price = str(stack_df['종가'][0])
-    stock_diff_won = str(stack_df['전일비'][0])
-    stock_diff_per = str(round((stack_df["종가"][0] - stack_df["종가"][1]) / stack_df["종가"][1], 2) )
-    stock_vol = str(stack_df['거래량'][0])
+    stock_price = str(int(stock_df['종가'][0]))
+    stock_diff_won = str(int(stock_df['전일비'][0]))
+    stock_diff_per = str(round(stock_df["전일비"][0] / stock_df["종가"][1], 2))
+    stock_vol = str(int(stock_df['거래량'][0]))
 
     #상황에 따른 문장 생성
 
     # 장 진행 중
-    final_sen_ing = '한편 ' + corp + '의 ' + str(RSS_info[2].hour) + '시' + str(RSS_info[2].minute) + '분 현재주가는 '  + stock_price +'원으로 직전 거래일 대비 ' + stock_diff_won +'원(' + inc_dec_ing(stock_diff_per) + ', 거래량은 ' + stock_vol + '주이다.'
+    final_sen_ing = '한편 ' + corp + '의 ' + str(RSS_info[2].hour) + '시' + str(RSS_info[2].minute) + '분 현재주가는 '  + stock_price +'원으로 직전 거래일 대비 ' +  inc_dec_ing(stock_diff_won, stock_diff_per) + ', 거래량은 ' + stock_vol + '주이다.'
 
     # 장마감 후 - 당일 (15시 ~ 18시)
-    final_sen_day = '한편 ' + corp + '은 장마감 이후 해당 기업공시를 발표했으며, 오늘 종가가 ' + stock_price +'원, 거래량은 ' + stock_vol + '주로, 직전 거래일 대비 ' + stock_diff_won + '원(' + inc_dec_done(stock_diff_per)
+    final_sen_day = '한편 ' + corp + '은 장마감 이후 해당 기업공시를 발표했으며, 오늘 종가가 ' + stock_price +'원, 거래량은 ' + stock_vol + '주로, 직전 거래일 대비 ' + stock_diff_won + '원' + inc_dec_done(stock_diff_won, stock_diff_per)
 
     # 장 마감 후 _ 다음날
-    final_sen_dayafter = '한편 ' + corp + '은 장시작 전에 해당 기업공시를 발표했으며, 전날 종가는 ' + stock_price +'원, 거래량은 ' + stock_vol + '주로, 직전 거래일 대비 ' + stock_diff_won + '원(' + inc_dec_done(stock_diff_per)
+    final_sen_dayafter = '한편 ' + corp + '은 장시작 전에 해당 기업공시를 발표했으며, 전날 종가는 ' + stock_price +'원, 거래량은 ' + stock_vol + '주로, 직전 거래일 대비 ' + stock_diff_won + '원' + inc_dec_done(stock_diff_won, stock_diff_per)
 
 
     # if 문
