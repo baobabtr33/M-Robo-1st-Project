@@ -1,10 +1,10 @@
 import time
 import RSS
 import pandas as pd
-import naverFinance
-import DART_Crawling_Preprocessing
-import makeChart
-import Write_Article
+import naver_finance
+import DART_crawling_preprocessing
+import make_chart
+import write_article
 import Sending_Email
 import sys
 import argparse
@@ -53,33 +53,33 @@ def main (argv):
 
                 feed_num = RSS_info[1].split('rcpNo=')[1]
                 print("FEED NUm" + feed_num)
-                stock_df = naverFinance.crawlStock(str(corpCode))
+                stock_df = naver_finance.crawlStock(str(corpCode))
                 print(stock_df)
 
                 print("+++++++++++++++ WEB CRAWL +++++++++++++++")
-                DART_df = DART_Crawling_Preprocessing.dart_crawling(my_driver_path, RSS_info[1])
-                DART_preprocess_df = DART_Crawling_Preprocessing.dart_preprocess(DART_df)
+                DART_df = DART_crawling_preprocessing.dart_crawling(my_driver_path, RSS_info[1])
+                DART_preprocess_df = DART_crawling_preprocessing.dart_preprocess(DART_df)
                 print(DART_preprocess_df)
                 print("+++++++++++++++++Write Article++++++++++++++++++++")
 
                 chart_file = []
-                chart_file.append(makeChart.draw_stock_chart(stock_df,RSS_info[3],feed_num))
-                chart_file.append(makeChart.draw_comparison_chart("계약 규모", feed_num, "최근 매출액", "이번계약",
-                                                            DART_preprocess_df[DART_preprocess_df.index.str.contains('최근')][0],
-                                                            DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0]))
+                chart_file.append(make_chart.draw_stock_chart(stock_df, RSS_info[3], feed_num))
+                chart_file.append(make_chart.draw_comparison_chart("계약 규모", feed_num, "최근 매출액", "이번계약",
+                                                                   DART_preprocess_df[DART_preprocess_df.index.str.contains('최근')][0],
+                                                                   DART_preprocess_df[DART_preprocess_df.index.str.contains('계약금액')][0]))
 
 
                 # 제목
-                title = Write_Article.Title(DART_preprocess_df, RSS_info)
+                title = write_article.Title(DART_preprocess_df, RSS_info)
                 print(title)
                 # 기사 생성
-                first_sen, third_sen = Write_Article.first_third_sentence(DART_preprocess_df, RSS_info)
+                first_sen, third_sen = write_article.first_third_sentence(DART_preprocess_df, RSS_info)
                 print(first_sen)
-                second_sen = Write_Article.second_sentence(DART_preprocess_df)
+                second_sen = write_article.second_sentence(DART_preprocess_df)
                 print(second_sen)
-                final_sen = Write_Article.final_sentence(RSS_info, stock_df)
+                final_sen = write_article.final_sentence(RSS_info, stock_df)
                 print(final_sen)
-                final_article = Write_Article.Article(first_sen, second_sen, third_sen, final_sen)
+                final_article = write_article.Article(first_sen, second_sen, third_sen, final_sen)
                 print()
                 print(final_article)
 
