@@ -9,6 +9,7 @@ import sending_email
 import sys
 import argparse
 import logging
+import logging.config
 from datetime import datetime
 from dateutil.parser import parse
 
@@ -131,7 +132,7 @@ def test_ver(my_driver_path):
 
                 print("+++++++++++++++++Sending Email++++++++++++++++++++")
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
-                str_to_email_addrs = ['tndhks3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
+                str_to_email_addrs = ['stevekim0131@naver.com']  # 수신자리스트
                 sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
                                                   chart_file,
                                                   str_from_email_addr, str_to_email_addrs)
@@ -145,14 +146,15 @@ def test_ver(my_driver_path):
 if __name__ == "__main__":
 
     # 로그 생성
+    """
     global logger
-    logger = logging.getLogger()
+    logger = logging.getLogger(__name__)
 
     # 로그의 출력 기준 설정
     logger.setLevel(logging.INFO)
 
     # log 출력 형식
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # log 출력
     stream_handler = logging.StreamHandler()
@@ -163,5 +165,16 @@ if __name__ == "__main__":
     file_handler = logging.FileHandler('supply_contract.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
+    """
+
+    logging.config.fileConfig('logging.conf')
+    logger = logging.getLogger(__name__)
+
+    # 'application' code
+    logger.debug('debug message')
+    logger.info('info message')
+    logger.warning('warn message')
+    logger.error('error message')
+    logger.critical('critical message')
 
     main(sys.argv[1:])
