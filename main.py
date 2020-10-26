@@ -23,13 +23,13 @@ def main(argv):
     args = arg_parser.parse_args()
 
     if args.state == "test":
+        logger.info("Starting program : test")
         test_ver(args.path)
     elif args.state == "service":
+        logger.info("Starting program : service")
         service_ver(args.path)
     else:
         print("Please choose which version to use (\"test\" or  \"service\")")
-
-
 
 
 def service_ver(my_driver_path):
