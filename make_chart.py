@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 from datetime import datetime
+from matplotlib import dates
+from pandas.plotting import register_matplotlib_converters
 
 
 def draw_stock_chart(df, corpname, filing_num):
@@ -26,8 +28,11 @@ def draw_stock_chart(df, corpname, filing_num):
     font_path = 'data/kor_font/NanumBarunGothic.ttf'
     fontprop = fm.FontProperties(fname=font_path, size=10)
 
+
     # make plot
-    plt.plot(series_df.index, series_df['종가'])
+    register_matplotlib_converters()
+    date_series = pd.to_datetime(series_df.index)
+    plt.plot(date_series, series_df['종가'])
     plt.xlabel("날짜(일)",fontproperties=fontprop, loc = "right")
     plt.ylabel("주가(원)",fontproperties=fontprop, rotation = "horizontal", loc = "top")
     plt.title(corpname + ", 최근 3개월",fontproperties=fontprop, loc = "right")
@@ -56,7 +61,6 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
     return:
         file_save : 저장한 위치, 파일명을 반환
     """
-
     # set data for plot
     comp1_num = int(re.search(r'\d+', comp1_num).group()) # to int
     comp2_num = int(re.search(r'\d+', comp2_num).group())
