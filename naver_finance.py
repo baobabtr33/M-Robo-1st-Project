@@ -17,6 +17,7 @@ def parse_naver_page(code, page):
     """
 
     try:
+        # Go to naver finance for corp stock data
         url = 'http://finance.naver.com/item/sise_day.nhn?code={code}&page={page}'.format(code=code, page=page)
         res = requests.get(url)
         _soup = BeautifulSoup(res.text, 'lxml')
@@ -38,11 +39,13 @@ def get_pg_last(soup):
     return:
         pg_last : 마지막 페이지 넘버
     """
+
     el_table_navi = soup.find("table", class_="Nnavi")
     el_td_last = el_table_navi.find("td", class_="pgRR")
     pg_last = el_td_last.a.get('href').rsplit('&')[1]
     pg_last = pg_last.split('=')[1]
     pg_last = int(pg_last)
+
     return pg_last
 
 
@@ -60,15 +63,17 @@ def crawl_stock(corporation_code):
     url = 'http://finance.naver.com/item/sise_day.nhn?code={code}'.format(code=corporation_code)
     res = requests.get(url)
     res.encoding = 'utf-8'
-
     soup = BeautifulSoup(res.text, 'lxml')
 
+    # get date range for 3 months
     minus_90_days = datetime.today() - timedelta(days=90)
     str_datefrom = datetime.strftime(minus_90_days, '%Y.%m.%d')
     str_dateto = datetime.strftime(datetime.today(), '%Y.%m.%d')
 
     df = None
     pg_last = get_pg_last(soup)
+
+    # traverse through needed pages to collect data
     for page in range(1, pg_last+1):
         _df = parse_naver_page(corporation_code, page)
         _df_filtered = _df[_df['날짜'] > str_datefrom]

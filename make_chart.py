@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 from datetime import datetime
+from matplotlib import dates
+from pandas.plotting import register_matplotlib_converters
 
 
 def draw_stock_chart(df, corpname, filing_num):
@@ -26,7 +28,11 @@ def draw_stock_chart(df, corpname, filing_num):
     font_path = 'data/kor_font/NanumBarunGothic.ttf'
     fontprop = fm.FontProperties(fname=font_path, size=10)
 
-    plt.plot(series_df.index, series_df['종가'])
+
+    # make plot
+    register_matplotlib_converters()
+    date_series = pd.to_datetime(series_df.index)
+    plt.plot(date_series, series_df['종가'])
     plt.xlabel("날짜(일)",fontproperties=fontprop, loc = "right")
     plt.ylabel("주가(원)",fontproperties=fontprop, rotation = "horizontal", loc = "top")
     plt.title(corpname + ", 최근 3개월",fontproperties=fontprop, loc = "right")
@@ -55,17 +61,18 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
     return:
         file_save : 저장한 위치, 파일명을 반환
     """
+    # set data for plot
     comp1_num = int(re.search(r'\d+', comp1_num).group()) # to int
     comp2_num = int(re.search(r'\d+', comp2_num).group())
-
     comp1_num = comp1_num / math.pow(10,8) # 억단위로
     comp2_num = comp2_num / math.pow(10,8)
 
-    y_axis = [comp1_name, comp2_name]
+    # define axis and labels
+    y_axis = [str(comp1_name), str(comp2_name)]
     x_axis = [float("{:.2f}".format(comp1_num)),float("{:.2f}".format(comp2_num))]
     y_pos = np.arange(len(y_axis))
 
-    # Create horizontal bars
+    # Create horizontal bar plot
     bars = plt.barh(y_pos, x_axis, height = 0.5)
     font_path = 'data/kor_font/NanumBarunGothic.ttf'
     fontprop = fm.FontProperties(fname=font_path, size=10)
@@ -74,15 +81,15 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
 
     # Create labels on the y-axis
     plt.yticks(y_pos, y_axis)
-
     locs, labels = plt.yticks()
     for label in labels:
         label.set_fontproperties(fontprop)
-    #save
+
+    # save plot
     file_save = 'db/chart/'+ filing_num + '-bar.png'
     plt.savefig(file_save, bbox_inches='tight')
     
-    #erase
+    # clear data
     plt.clf()
 
     return file_save

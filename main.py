@@ -8,6 +8,7 @@ import write_article
 import sending_email
 import sys
 import argparse
+import logging
 
 from dateutil.parser import parse
 
@@ -19,17 +20,16 @@ def main(argv):
                             help="Chrome Driver Path must be given")
     arg_parser.add_argument('state', type=str,
                             help="Need to choose \"test\" or  \"service\" for the project")
-
     args = arg_parser.parse_args()
 
     if args.state == "test":
+        logger.info("Starting program : test")
         test_ver(args.path)
     elif args.state == "service":
+        logger.info("Starting program : service")
         service_ver(args.path)
     else:
         print("Please choose which version to use (\"test\" or  \"service\")")
-
-
 
 
 def service_ver(my_driver_path):
@@ -71,7 +71,7 @@ def service_ver(my_driver_path):
                 print("Composing sentence for new article: COMPLETE")
 
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
-                str_to_email_addrs = ['swan3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
+                str_to_email_addrs = ['tndhks3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
                 sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
                                                   chart_file,
                                                   str_from_email_addr, str_to_email_addrs)
@@ -130,7 +130,7 @@ def test_ver(my_driver_path):
 
                 print("+++++++++++++++++Sending Email++++++++++++++++++++")
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
-                str_to_email_addrs = ['swan3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
+                str_to_email_addrs = ['tndhks3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
                 sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
                                                   chart_file,
                                                   str_from_email_addr, str_to_email_addrs)
@@ -142,4 +142,25 @@ def test_ver(my_driver_path):
 
 
 if __name__ == "__main__":
+
+    # 로그 생성
+    global logger
+    logger = logging.getLogger()
+
+    # 로그의 출력 기준 설정
+    logger.setLevel(logging.INFO)
+
+    # log 출력 형식
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+    # log 출력
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
+
+    # log를 파일에 출력
+    file_handler = logging.FileHandler('supply_contract.log')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
     main(sys.argv[1:])
