@@ -83,5 +83,5 @@ def crawl_stock(corporation_code):
             df = pd.concat([df, _df_filtered])
         if len(_df) > len(_df_filtered):
             break
-
+    print("f")
     return df.set_index('날짜')
