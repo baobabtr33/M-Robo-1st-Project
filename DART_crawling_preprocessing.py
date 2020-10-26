@@ -9,7 +9,7 @@ from tqdm import tqdm
 import lxml.html
 import os
 import re
-
+import logging.config
 
 def dart_crawling(my_driver_path, url):
     """
@@ -22,6 +22,9 @@ def dart_crawling(my_driver_path, url):
     return:
         DART_df : 공시 table 내용을 가지고 옴
     """
+    logger = logging.getLogger(__name__)
+    logger.info("다트 공시 크롤링")
+
     # 크롬드라이버 경로 설정
     current_path = os.getcwd()                          #현재 경로 저장
     os.chdir(my_driver_path)                            #chromedriver가 있는 경로로 바꿔줌
@@ -66,6 +69,8 @@ def dart_preprocess(DART_df):
     return:
         DART_preprocess_df : 공시 table 중 필요한 내용만 시리즈 형식으로 추출.
     """
+    logger = logging.getLogger(__name__)
+    logger.info("다트 공시 전처리")
 
     #공시 소제목과 공시 내용만 추출함.
     DART_df.columns = ['공시대제목', '공시소제목', '공시내용', '공시내용2(같은내용)']

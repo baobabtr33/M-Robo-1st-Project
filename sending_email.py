@@ -4,6 +4,7 @@ from string import Template # 문자열 템플릿 모듈을 위함.
 from email.mime.multipart import MIMEMultipart
 from email.mime.text      import MIMEText
 from email.mime.image     import MIMEImage
+import logging.config
 
 class EmailHTMLImageContent:
     """
@@ -23,6 +24,9 @@ class EmailHTMLImageContent:
         return :
             이메일에 담길 이미지와 텍스트 임베딩
         """
+        logger = logging.getLogger(__name__)
+        logger.info("이메일에 이미지, 텍스트 임베딩")
+
         assert isinstance(template,Template)
         assert isinstance(template_params, dict)
         self.msg = MIMEMultipart()
@@ -51,6 +55,7 @@ class EmailHTMLImageContent:
             mime_img.add_header('Content-ID', '<' + str_cid_name2 + '>')
         self.msg.attach(mime_img)
 
+
     def get_message(self, str_from_email_addr, str_to_eamil_addrs):
         """
         발신자, 수신자리스트를 이용하여 보낼메시지를 만든다
@@ -60,6 +65,7 @@ class EmailHTMLImageContent:
         return:
             mm : 발신자, 수신자 리스트
         """
+
         mm = copy.deepcopy(self.msg)
         mm['From'] = str_from_email_addr  # 발신자
         mm['To'] = ",".join(str_to_eamil_addrs)  # 수신자리스트
@@ -72,6 +78,10 @@ class EmailSender:
         """
         자신의 gamil 계정과 앱 비밀번호 넣기
         """
+        logger = logging.getLogger(__name__)
+        logger.info("구글 계정, 앱 비밀번호")
+
+
         self.ss = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         self.ss.login('tndhks3837@gmail.com', 'cyuidhhqqepdqhmo')  # 나의 앱비밀번호
 
@@ -83,6 +93,9 @@ class EmailSender:
             str_from_email_addr : 발신자자
            str_to_email_addrs : 수신자 리스트
         """
+        logger = logging.getLogger(__name__)
+        logger.info("이메일 보내기")
+
         cc = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
         self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
         del cc
@@ -104,6 +117,10 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
     return:
         이메일 보냄
     """
+    logger = logging.getLogger(__name__)
+    logger.info("이메일 보내기 완료")
+
+
     template = Template("""<html>
                                 <head></head>
                                 <body>
@@ -116,8 +133,10 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
                                     공시전문으로 이동
                                     </a> <br>
                                     <img src="cid:bar"><br>
+                                    </a><br>
                                 </body>
                             </html>""")
+
 
     emailHTMLImageContent = EmailHTMLImageContent(str_subject=title, str_image_file_name1=chart_file[0],
                                                 str_cid_name1='chart', str_image_file_name2=chart_file[1],
@@ -129,3 +148,6 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
     emailsender= EmailSender()
     emailsender.send_message(EmailHTMLImageContent=emailHTMLImageContent, str_from_email_addr=str_from_email_addr,
                              str_to_email_addrs=str_to_email_addrs)
+
+
+
