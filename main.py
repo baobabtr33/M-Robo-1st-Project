@@ -142,6 +142,7 @@ def test_ver(my_driver_path):
 
 
 if __name__ == "__main__":
+
     # 로그 생성
     global logger
     logger = logging.getLogger()
