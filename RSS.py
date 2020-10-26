@@ -2,7 +2,7 @@ import feedparser
 from dateutil.parser import parse
 from datetime import datetime, timedelta
 import pandas as pd
-
+import logging.config
 
 def new_rss(date_tracker):
     """
@@ -20,8 +20,17 @@ def new_rss(date_tracker):
     fp = feedparser.parse(url)
     ret = []
 
+    logger = logging.getLogger(__name__)
+
+    # status code 확인
+    if fp.status != 200:
+        logger.info("200이 아님")
+        exit()
+    logger.info("THIS IS FROM RSS MODULE")
+
     # RSS에 공급계약체결이 없을 시,
     # entry 가장 최근 공시가 위, 내림차순
+    # TODO: use feedparser's etag or status code to check modified RSS
     for e in fp.entries:
         if(parse(e.published) <= date_tracker):         # compare date to get new feed
             break

@@ -9,7 +9,8 @@ import sending_email
 import sys
 import argparse
 import logging
-
+import logging.config
+from datetime import datetime
 from dateutil.parser import parse
 
 
@@ -43,17 +44,18 @@ def service_ver(my_driver_path):
             if "단일판매ㆍ공급계약체결" in RSS_info[0] and not "정정" in RSS_info[0]:
                 # RSS_info composition
                 # 0. title 1. link 2. datetime 3. creator
+                logger.info("Target Filing : " + RSS_info[3] + " " + RSS_info[0])
 
                 corp_code = RSS.corp_to_code(RSS_info[3])
-                print("Converting corporation name to code: COMPLETE")
+                logger.info("Converting corporation name to code: COMPLETE")
 
                 feed_num = RSS_info[1].split('rcpNo=')[1]
                 stock_df = naver_finance.crawl_stock(str(corp_code))
-                print("Fetching stock data from NAVER finance: COMPLETE")
+                logger.info("Fetching stock data from NAVER finance: COMPLETE")
 
                 DART_df = DART_crawling_preprocessing.dart_crawling(my_driver_path, RSS_info[1])
                 DART_preprocess_df = DART_crawling_preprocessing.dart_preprocess(DART_df)
-                print("Fetching DART filing data from DART: COMPLETE")
+                logger.info("Fetching DART filing data from DART: COMPLETE")
 
 
                 chart_file = []
@@ -64,23 +66,21 @@ def service_ver(my_driver_path):
                                                                    DART_preprocess_df[
                                                                        DART_preprocess_df.index.str.contains('계약금액')][
                                                                        0]))
-                print("Making charts: COMPLETE")
+                logger.info("Making charts: COMPLETE")
 
                 title, first_sen, second_sen, third_sen, final_sen = write_article.write_title_article(
                     DART_preprocess_df, RSS_info, stock_df)
-                print("Composing sentence for new article: COMPLETE")
+                logger.info("Composing sentence for new article: COMPLETE")
 
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
                 str_to_email_addrs = ['tndhks3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
                 sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
                                                   chart_file,
                                                   str_from_email_addr, str_to_email_addrs)
-                print("Sending e-mail to recipient: COMPLETE")
-                print("=====================================")
-                print("==========PROCESS COMPLETE ==========")
-                print("=====================================")
+                logger.info("Sending e-mail to recipient: COMPLETE")
+                logger.info("TASK COMPLETE!!")
 
-        print("WAITING RSS feed ...")
+        logger.info("WAITING for RSS feed ...")
         time.sleep(60)
 
 
@@ -91,6 +91,8 @@ def test_ver(my_driver_path):
     # switch on and off 0 /1
     while 1:
         new_feed, date_tracker = RSS.new_rss(date_tracker)
+        if not new_feed:
+            new_feed.append(('단일판매ㆍ공급계약체결', 'http://dart.fss.or.kr/dsaf001/main.do?rcpNo=20201013900126', datetime.today(), '엔씨소프트'))
         for RSS_info in new_feed:
             # 정정은 다루지 않는다
             if "단일판매ㆍ공급계약체결" in RSS_info[0] and not "정정" in RSS_info[0]:
@@ -130,7 +132,7 @@ def test_ver(my_driver_path):
 
                 print("+++++++++++++++++Sending Email++++++++++++++++++++")
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
-                str_to_email_addrs = ['tndhks3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
+                str_to_email_addrs = ['stevekim0131@naver.com']  # 수신자리스트
                 sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
                                                   chart_file,
                                                   str_from_email_addr, str_to_email_addrs)
@@ -144,14 +146,15 @@ def test_ver(my_driver_path):
 if __name__ == "__main__":
 
     # 로그 생성
+    """
     global logger
-    logger = logging.getLogger()
+    logger = logging.getLogger(__name__)
 
     # 로그의 출력 기준 설정
     logger.setLevel(logging.INFO)
 
     # log 출력 형식
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     # log 출력
     stream_handler = logging.StreamHandler()
@@ -162,5 +165,16 @@ if __name__ == "__main__":
     file_handler = logging.FileHandler('supply_contract.log')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
+    """
+
+    logging.config.fileConfig('logging.conf')
+    logger = logging.getLogger(__name__)
+
+    # 'application' code
+    logger.debug('debug message')
+    logger.info('info message')
+    logger.warning('warn message')
+    logger.error('error message')
+    logger.critical('critical message')
 
     main(sys.argv[1:])
