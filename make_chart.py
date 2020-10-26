@@ -64,7 +64,7 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
     comp2_num = comp2_num / math.pow(10,8)
 
     # define axis and labels
-    y_axis = [comp1_name, comp2_name]
+    y_axis = [str(comp1_name), str(comp2_name)]
     x_axis = [float("{:.2f}".format(comp1_num)),float("{:.2f}".format(comp2_num))]
     y_pos = np.arange(len(y_axis))
 

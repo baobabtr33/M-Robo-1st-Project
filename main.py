@@ -142,20 +142,24 @@ def test_ver(my_driver_path):
 
 
 if __name__ == "__main__":
-    """
-    # set logger
-    global project_logger
+    # 로그 생성
+    global logger
+    logger = logging.getLogger()
 
-    project_logger = logging.getLogger("proj1")
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # 로그의 출력 기준 설정
+    logger.setLevel(logging.INFO)
 
-    stream_hander = logging.StreamHandler()
-    stream_hander.setFormatter(formatter)
-    project_logger.addHandler(stream_hander)
+    # log 출력 형식
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-    file_handler = logging.FileHandler('proj1.log')
-    project_logger.addHandler(file_handler)
+    # log 출력
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
 
-    project_logger.info("server start!!!")
-    """
+    # log를 파일에 출력
+    file_handler = logging.FileHandler('supply_contract.log')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
     main(sys.argv[1:])
