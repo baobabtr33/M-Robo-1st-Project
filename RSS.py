@@ -23,9 +23,18 @@ def new_rss(date_tracker):
     logger = logging.getLogger(__name__)
 
     # status code 확인
+    # status 4XX
+    # TODO: status number fill in with format function
     if fp.status != 200:
-        logger.info("200이 아님")
-        exit()
+        status_category = str(fp.status)[0]
+        if status_category == '3':
+            logger.error("DART RSS: HTTPS status - 3XX - redirection")
+        elif status_category == '4':
+            logger.warning("DART RSS: HTTPS status - 4XX - client error")
+            exit()
+        elif status_category == '5':
+            logger.warning("DART RSS: HTTPS status - 5XX - server error")
+            exit()
     logger.info("THIS IS FROM RSS MODULE")
 
     # RSS에 공급계약체결이 없을 시,
