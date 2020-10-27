@@ -24,8 +24,6 @@ class EmailHTMLImageContent:
         return :
             이메일에 담길 이미지와 텍스트 임베딩
         """
-        logger = logging.getLogger(__name__)
-        logger.info("이메일에 이미지, 텍스트 임베딩")
 
         assert isinstance(template,Template)
         assert isinstance(template_params, dict)
@@ -78,9 +76,6 @@ class EmailSender:
         """
         자신의 gamil 계정과 앱 비밀번호 넣기
         """
-        logger = logging.getLogger(__name__)
-        logger.info("구글 계정, 앱 비밀번호")
-
 
         self.ss = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         self.ss.login('tndhks3837@gmail.com', 'cyuidhhqqepdqhmo')  # 나의 앱비밀번호
@@ -93,8 +88,6 @@ class EmailSender:
             str_from_email_addr : 발신자자
            str_to_email_addrs : 수신자 리스트
         """
-        logger = logging.getLogger(__name__)
-        logger.info("이메일 보내기")
 
         cc = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
         self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
@@ -118,7 +111,7 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
         이메일 보냄
     """
     logger = logging.getLogger(__name__)
-    logger.info("이메일 보내기 완료")
+    logger.info("Sending Email Complete")
 
 
     template = Template("""<html>

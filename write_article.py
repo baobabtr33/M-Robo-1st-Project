@@ -43,8 +43,6 @@ def Title(DART_preprocess_df, RSS_info):
     return :
         title : 기사 제목
     """
-    logger = logging.getLogger(__name__)
-    logger.info("제목 생성")
 
     corp = RSS_info[3] #회사명
     partner = DART_preprocess_df[DART_preprocess_df.index.str.contains('계약상대')][0] #계약상대 회사명
@@ -68,9 +66,6 @@ def first_third_sentence(DART_preprocess_df, RSS_info):
     return :
         first_sen, thrid_sen : 각각 첫번째, 세번째 문장
     """
-
-    logger = logging.getLogger(__name__)
-    logger.info("1, 3번째 문장 생성")
 
 
     # 필요한 내용
@@ -100,9 +95,6 @@ def second_sentence(DART_preprocess_df):
     return :
         second_sen : 두번째 문장
     """
-
-    logger = logging.getLogger(__name__)
-    logger.info("두번째 문장 생성")
 
     # 필요한 내용
     contract_content = DART_preprocess_df[0] # 계약 내용
@@ -198,9 +190,6 @@ def final_sentence(RSS_info, stock_df):
         final_sen : 마지막 문장 return
     """
 
-    logger = logging.getLogger(__name__)
-    logger.info("마지막 문장 생성")
-
     #필요한 내용
     corp = RSS_info[3] #기업명
 
@@ -248,7 +237,7 @@ def write_title_article(DART_preprocess_df, RSS_info, stock_df):
         제목, 각각의 기사
     """
     logger = logging.getLogger(__name__)
-    logger.info("기사, 제목 생성 완료")
+    logger.info("Write Title, Article Complete")
 
     # 제목
     title = Title(DART_preprocess_df, RSS_info)
