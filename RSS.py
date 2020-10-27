@@ -65,7 +65,7 @@ def corp_to_code(corpname):
     code = ""
 
     try:
-        code = str(corporation[corporation['회사명'] == "asdfdd"]['종목코드'].values[0].item())
+        code = str(corporation[corporation['회사명'] == corpname]['종목코드'].values[0].item())
         code = '0' * (6 - len(code)) + code
     except IndexError:
         logging.warning("Corporation code cannot be found. Corporation name: {}".format(corpname))
