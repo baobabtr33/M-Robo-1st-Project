@@ -47,7 +47,10 @@ def service_ver(my_driver_path):
                 logger.info("Target Filing : " + RSS_info[3] + " " + RSS_info[0])
 
                 corp_code = RSS.corp_to_code(RSS_info[3])
-                logger.info("Converting corporation name to code: COMPLETE")
+                if(corp_code == ""):
+                    continue
+                else:
+                    logger.info("Converting corporation name to code: COMPLETE")
 
                 feed_num = RSS_info[1].split('rcpNo=')[1]
                 stock_df = naver_finance.crawl_stock(str(corp_code))
