@@ -72,7 +72,7 @@ def dart_preprocess(DART_df):
     return:
         DART_preprocess_df : 공시 table 중 필요한 내용만 시리즈 형식으로 추출.
     """
-    if DART_df.shape[1] > 2 :
+    if DART_df.shape[0] > 2 :
         #공시 소제목과 공시 내용만 추출함.
         DART_df.columns = ['공시대제목', '공시소제목', '공시내용', '공시내용2(같은내용)']
         idx= DART_df[DART_df['공시소제목'].str.contains("종료일")].index[0]  # 종료일 이후는 안 쓴다.
