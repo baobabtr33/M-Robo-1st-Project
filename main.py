@@ -47,10 +47,10 @@ def service_ver(my_driver_path):
                 logger.info("Target Filing: " + RSS_info[3] + " " + RSS_info[0])
 
                 corp_code = RSS.corp_to_code(RSS_info[3])
-                if(corp_code == ""):
-                    continue
-                else:
+                if(corp_code != ""):
                     logger.info("Converting corporation name to code: COMPLETE")
+                else:
+                    continue
 
                 feed_num = RSS_info[1].split('rcpNo=')[1]
                 stock_df = naver_finance.crawl_stock(str(corp_code))
@@ -58,7 +58,10 @@ def service_ver(my_driver_path):
 
                 DART_df = DART_crawling_preprocessing.dart_crawling(my_driver_path, RSS_info[1])
                 DART_preprocess_df = DART_crawling_preprocessing.dart_preprocess(DART_df)
-                logger.info("Fetching DART filing data from DART: COMPLETE")
+                if DART_preprocess_df:
+                    logger.info("Fetching DART filing data from DART: COMPLETE")
+                else:
+                    continue
 
 
                 chart_file = []

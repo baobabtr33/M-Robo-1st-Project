@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import traceback
 from datetime import datetime, timedelta
-import log_helper.py
+import log_helper
 import logging.config
 
 logger = logging.getLogger(__name__)
@@ -20,17 +20,16 @@ def parse_naver_page(code, page):
         table_df : 페이지 나온 종목 주가들 df
     """
 
-    try:
-        # Go to naver finance for corp stock data
-        url = 'http://finance.naver.com/item/sise_day.nhn?code={code}&page={page}'.format(code=code, page=page)
-        res = requests.get(url)
-        _soup = BeautifulSoup(res.text, 'lxml')
-        _df = pd.read_html(str(_soup.find("table")), header=0)[0]
-        _df = _df.dropna()
-        return _df
-    except Exception as e:
-        traceback.print_exc()
-    return None
+    # Go to naver finance for corp stock data
+    url = 'http://finance.naver.com/item/sise_day.nhn?code={code}&page={page}'.format(code=code, page=page)
+    res = requests.get(url)
+
+    log_helper(res.status_code)
+
+    soup = BeautifulSoup(res.text, 'lxml')
+    df = pd.read_html(str(soup.find("table")), header=0)[0]
+    df = df.dropna()
+    return df
 
 
 def get_pg_last(soup):
@@ -74,7 +73,6 @@ def crawl_stock(corporation_code):
     # get date range for 3 months
     minus_90_days = datetime.today() - timedelta(days=90)
     str_datefrom = datetime.strftime(minus_90_days, '%Y.%m.%d')
-    str_dateto = datetime.strftime(datetime.today(), '%Y.%m.%d')
 
     df = None
     pg_last = get_pg_last(soup)

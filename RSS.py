@@ -24,7 +24,7 @@ def new_rss(date_tracker):
     fp = feedparser.parse(url)
     ret = []
 
-    log_helper.status_checker(__name__, fp.status)
+    log_helper.status_checker(__name__, '300')
 
     # RSS에 공급계약체결이 없을 시,
     # entry 가장 최근 공시가 위, 내림차순
@@ -35,7 +35,7 @@ def new_rss(date_tracker):
         entry_tuple = (e.title, e.link, parse(e.published),e.author)
         ret.append(entry_tuple)
 
-    print("Checking RSS - new feed(s): " + str(len(ret)))
+    logger.info("Checking RSS - new feed(s): " + str(len(ret)))
     return ret, parse(fp.entries[0].published)
 
 
