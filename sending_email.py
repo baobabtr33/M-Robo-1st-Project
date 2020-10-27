@@ -110,9 +110,6 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
     return:
         이메일 보냄
     """
-    logger = logging.getLogger(__name__)
-    logger.info("Sending Email Complete")
-
 
     template = Template("""<html>
                                 <head></head>

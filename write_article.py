@@ -236,8 +236,6 @@ def write_title_article(DART_preprocess_df, RSS_info, stock_df):
     return : 
         제목, 각각의 기사
     """
-    logger = logging.getLogger(__name__)
-    logger.info("Write Title, Article Complete")
 
     # 제목
     title = Title(DART_preprocess_df, RSS_info)
