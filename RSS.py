@@ -3,6 +3,7 @@ from dateutil.parser import parse
 from datetime import datetime, timedelta
 import pandas as pd
 import logging.config
+import log_helper
 
 logger = logging.getLogger(__name__)
 corporation = pd.read_csv('data/corporation_code.csv')
@@ -23,20 +24,7 @@ def new_rss(date_tracker):
     fp = feedparser.parse(url)
     ret = []
 
-    if fp.status != 200:
-        status_category = str(fp.status)[0]
-        if status_category == '3':
-            logger.error("DART RSS: HTTPS status - {} - redirection".format(fp.status))
-            # continue
-        elif status_category == '4':
-            logger.warning("DART RSS: HTTPS status - {} - client error".format(fp.status))
-            exit()
-        elif status_category == '5':
-            logger.warning("DART RSS: HTTPS status - {} - server error".format(fp.status))
-            exit()
-        else:
-            logger.INFO("Something is wrong with RSS request. Status Code: {}".format(fp.status))
-            # continue
+    log_helper.status_checker(__name__, fp.status)
 
     # RSS에 공급계약체결이 없을 시,
     # entry 가장 최근 공시가 위, 내림차순
@@ -47,7 +35,7 @@ def new_rss(date_tracker):
         entry_tuple = (e.title, e.link, parse(e.published),e.author)
         ret.append(entry_tuple)
 
-    print("Checking RSS - new feed(s) : " + str(len(ret)))
+    print("Checking RSS - new feed(s): " + str(len(ret)))
     return ret, parse(fp.entries[0].published)
 
 

@@ -3,6 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 import traceback
 from datetime import datetime, timedelta
+import log_helper.py
+import logging.config
+
+logger = logging.getLogger(__name__)
 
 def parse_naver_page(code, page):
     """
@@ -64,6 +68,8 @@ def crawl_stock(corporation_code):
     res = requests.get(url)
     res.encoding = 'utf-8'
     soup = BeautifulSoup(res.text, 'lxml')
+
+    log_helper.status_checker(__name__, res.status)
 
     # get date range for 3 months
     minus_90_days = datetime.today() - timedelta(days=90)
