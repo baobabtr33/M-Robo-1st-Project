@@ -4,7 +4,7 @@ import pandas as pd
 import mFinance
 import mDART
 import mChart
-import mWrite
+import mArticle
 import mEmail
 import sys
 import argparse
@@ -74,7 +74,7 @@ def service_ver(my_driver_path):
                                                                DART_preprocess_df[ DART_preprocess_df.index.str.contains('계약금액')][0]))
                 logger.info("Making charts: COMPLETE")
 
-                title, first_sen, second_sen, third_sen, final_sen = mWrite.write_title_article(
+                title, first_sen, second_sen, third_sen, final_sen = mArticle.write_title_article(
                     DART_preprocess_df, RSS_info, stock_df)
                 logger.info("Composing sentence for new article: COMPLETE")
 
@@ -133,7 +133,7 @@ def test_ver(my_driver_path):
                                                                        DART_preprocess_df.index.str.contains('계약금액')][
                                                                        0]))
 
-                title, first_sen, second_sen, third_sen, final_sen = mWrite.write_title_article(
+                title, first_sen, second_sen, third_sen, final_sen = mArticle.write_title_article(
                     DART_preprocess_df, RSS_info, stock_df)
 
                 print("+++++++++++++++++Sending Email++++++++++++++++++++")
