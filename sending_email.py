@@ -89,9 +89,9 @@ class EmailSender:
            str_to_email_addrs : 수신자 리스트
         """
 
-        cc = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
-        self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
-        del cc
+        EmailContent = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
+        self.ss.send_message(EmailContent, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
+        del EmailContent
 
 
 def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen, chart_file, str_from_email_addr, str_to_email_addrs):
