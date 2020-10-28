@@ -34,7 +34,7 @@ def main(argv):
 
 
 def service_ver(my_driver_path):
-    # initial Settings
+    # initial Settings 
     date_tracker = parse("Mon, 1 Jan 1000 00:00:01 GMT")
 
     while 1:
