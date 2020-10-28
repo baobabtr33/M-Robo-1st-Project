@@ -141,4 +141,5 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
 
 
     except:
-        logger.debug("Sending_Final_Email: Fail to sending email")
+        logger = logging.getLogger(__name__)
+        logger.error("Sending_Final_Email: Fail to sending email")

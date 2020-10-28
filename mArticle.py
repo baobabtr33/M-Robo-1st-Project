@@ -31,7 +31,8 @@ def convert_number(num):
         elif num == 0 :
             result = "0"
     except :
-        logger.debug("convert_number: Fail to convert money unit")
+        logger = logging.getLogger(__name__)
+        logger.error("convert_number: Fail to convert money unit")
 
     return result
 
@@ -55,7 +56,9 @@ def Title(DART_preprocess_df, RSS_info):
         title = corp + ' ' + hgtk.josa.attach(partner, hgtk.josa.GWA_WA) + ' ' +  contract_price +'원' + ' 계약체결'
 
     except:
-        logger.debug("Title: Fail to write Title")
+        logger = logging.getLogger(__name__)
+        logger.error("Title: Fail to write Title")
+
     return title
 
 #문장 생성
@@ -85,7 +88,9 @@ def first_third_sentence(DART_preprocess_df, RSS_info):
         #세번쨰 문장
         third_sen = '계약규모는 ' + contract_price+'원으로 최근 매출액인 ' + recent_sales + ' 대비 ' + diff + '% 수준이다'
     except :
-        logger.debug("first_third_sentence: Fail to write 1st&3rd Sentence")
+        logger = logging.getLogger(__name__)
+        logger.error("first_third_sentence: Fail to write 1st&3rd Sentence")
+
     return first_sen, third_sen
 
 #두번째 문장
@@ -128,7 +133,9 @@ def second_sentence(DART_preprocess_df):
         elif (start_date != '-') & (end_date != '-') :
             second_sen = second_sen_both
     except :
-        logger.debug("second_sentence: Fail to write 2nd Sentence")
+        logger = logging.getLogger(__name__)
+        logger.error("second_sentence: Fail to write 2nd Sentence")
+
     return second_sen
 
 # 마지막 문장
@@ -231,7 +238,8 @@ def final_sentence(RSS_info, stock_df):
             final_sen = final_sen_dayafter
 
     except :
-        logger.debug("final_sentence: Fail to write final Sentence")
+        logger = logging.getLogger(__name__)
+        logger.error("final_sentence: Fail to write final Sentence")
 
     return final_sen
 

@@ -10,6 +10,7 @@ import lxml.html
 import os
 import re
 import logging.config
+import logging.config
 
 def dart_crawling(my_driver_path, url):
     """
@@ -55,6 +56,7 @@ def dart_crawling(my_driver_path, url):
         DART_df = html_df[0]
 
     except WebDriverException:
+        logger = logging.getLogger(__name__)
         logging.warning("Message: 'chromedriver.exe' executable needs to be in PATH. Please see https://sites.google.com/a/chromium.org/chromedriver/home")
         exit()
 
@@ -83,6 +85,7 @@ def dart_preprocess(DART_df):
         DART_preprocess_df = pd.Series(DART_preprocess_df['공시내용'])
 
     else:
+        logger = logging.getLogger(__name__)
         logging.warning("Fetching Wrong Table")
         return None
 
