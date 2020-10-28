@@ -14,7 +14,7 @@ def status_checker(name, status):
             exit()
         elif status_category == '5':
             logger.warning("DART RSS: HTTPS status - {} - server error".format(status))
-            exit()
+
         else:
             logger.INFO("Something is wrong with RSS request. Status Code: {}".format(status))
             # continue
