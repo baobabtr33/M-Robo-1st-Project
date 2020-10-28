@@ -1,11 +1,11 @@
 import time
 import RSS
 import pandas as pd
-import naver_finance
-import DART_crawling_preprocessing
-import make_chart
-import write_article
-import sending_email
+import mFinance
+import mDART
+import mChart
+import mWrite
+import mEmail
 import sys
 import argparse
 import logging
@@ -47,42 +47,42 @@ def service_ver(my_driver_path):
                 logger.info("Target Filing: " + RSS_info[3] + " " + RSS_info[0])
 
                 corp_code = RSS.corp_to_code(RSS_info[3])
-                if(corp_code != ""):
+                if corp_code != "":
                     logger.info("Converting corporation name to code: COMPLETE")
                 else:
                     continue
 
                 feed_num = RSS_info[1].split('rcpNo=')[1]
-                stock_df = naver_finance.crawl_stock(str(corp_code))
-                logger.info("Fetching stock data from NAVER finance: COMPLETE")
+                stock_df = mFinance.crawl_stock(str(corp_code))
+                if stock_df is not None:
+                    logger.info("Fetching stock data from NAVER finance: COMPLETE")
+                else:
+                    continue
 
-                DART_df = DART_crawling_preprocessing.dart_crawling(my_driver_path, RSS_info[1])
-                DART_preprocess_df = DART_crawling_preprocessing.dart_preprocess(DART_df)
-                if DART_preprocess_df:
+                DART_df = mDART.dart_crawling(my_driver_path, RSS_info[1])
+                DART_preprocess_df = mDART.dart_preprocess(DART_df)
+                if DART_preprocess_df is not None:
                     logger.info("Fetching DART filing data from DART: COMPLETE")
                 else:
                     continue
 
 
                 chart_file = []
-                chart_file.append(make_chart.draw_stock_chart(stock_df, RSS_info[3], feed_num))
-                chart_file.append(make_chart.draw_comparison_chart("계약 규모", feed_num, "최근 매출액", "이번계약",
-                                                                   DART_preprocess_df[
-                                                                       DART_preprocess_df.index.str.contains('최근')][0],
-                                                                   DART_preprocess_df[
-                                                                       DART_preprocess_df.index.str.contains('계약금액')][
-                                                                       0]))
+                chart_file.append(mChart.draw_stock_chart(stock_df, RSS_info[3], feed_num))
+                chart_file.append(mChart.draw_comparison_chart("계약 규모", feed_num, "최근 매출액", "이번계약",
+                                                               DART_preprocess_df[DART_preprocess_df.index.str.contains('최근')][0],
+                                                               DART_preprocess_df[ DART_preprocess_df.index.str.contains('계약금액')][0]))
                 logger.info("Making charts: COMPLETE")
 
-                title, first_sen, second_sen, third_sen, final_sen = write_article.write_title_article(
+                title, first_sen, second_sen, third_sen, final_sen = mWrite.write_title_article(
                     DART_preprocess_df, RSS_info, stock_df)
                 logger.info("Composing sentence for new article: COMPLETE")
 
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
                 str_to_email_addrs = ['tndhks3837@gmail.com', 'stevekim0131@naver.com']  # 수신자리스트
-                sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
-                                                  chart_file,
-                                                  str_from_email_addr, str_to_email_addrs)
+                mEmail.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
+                                           chart_file,
+                                           str_from_email_addr, str_to_email_addrs)
                 logger.info("Sending e-mail to recipient: COMPLETE")
                 logger.info("TASK COMPLETE!!")
 
@@ -115,33 +115,33 @@ def test_ver(my_driver_path):
 
                 feed_num = RSS_info[1].split('rcpNo=')[1]
                 print("FEED NUm" + feed_num)
-                stock_df = naver_finance.crawl_stock(str(corp_code))
+                stock_df = mFinance.crawl_stock(str(corp_code))
                 print(stock_df)
 
                 print("+++++++++++++++ WEB CRAWL +++++++++++++++")
-                DART_df = DART_crawling_preprocessing.dart_crawling(my_driver_path, RSS_info[1])
-                DART_preprocess_df = DART_crawling_preprocessing.dart_preprocess(DART_df)
+                DART_df = mDART.dart_crawling(my_driver_path, RSS_info[1])
+                DART_preprocess_df = mDART.dart_preprocess(DART_df)
                 print(DART_preprocess_df)
                 print("+++++++++++++++++Write Article++++++++++++++++++++")
 
                 chart_file = []
-                chart_file.append(make_chart.draw_stock_chart(stock_df, RSS_info[3], feed_num))
-                chart_file.append(make_chart.draw_comparison_chart("계약 규모", feed_num, "최근 매출액", "이번계약",
-                                                                   DART_preprocess_df[
+                chart_file.append(mChart.draw_stock_chart(stock_df, RSS_info[3], feed_num))
+                chart_file.append(mChart.draw_comparison_chart("계약 규모", feed_num, "최근 매출액", "이번계약",
+                                                               DART_preprocess_df[
                                                                        DART_preprocess_df.index.str.contains('최근')][0],
-                                                                   DART_preprocess_df[
+                                                               DART_preprocess_df[
                                                                        DART_preprocess_df.index.str.contains('계약금액')][
                                                                        0]))
 
-                title, first_sen, second_sen, third_sen, final_sen = write_article.write_title_article(
+                title, first_sen, second_sen, third_sen, final_sen = mWrite.write_title_article(
                     DART_preprocess_df, RSS_info, stock_df)
 
                 print("+++++++++++++++++Sending Email++++++++++++++++++++")
                 str_from_email_addr = 'tndhks3837@gmail.com'  # 발신자
                 str_to_email_addrs = ['stevekim0131@naver.com']  # 수신자리스트
-                sending_email.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
-                                                  chart_file,
-                                                  str_from_email_addr, str_to_email_addrs)
+                mEmail.Sending_Final_Email(RSS_info[1], title, first_sen, second_sen, third_sen, final_sen,
+                                           chart_file,
+                                           str_from_email_addr, str_to_email_addrs)
 
                 print()
                 print("=========================END=========================")

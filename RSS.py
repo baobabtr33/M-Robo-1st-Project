@@ -3,9 +3,8 @@ from dateutil.parser import parse
 from datetime import datetime, timedelta
 import pandas as pd
 import logging.config
-import log_helper
+import mLog
 
-logger = logging.getLogger(__name__)
 corporation = pd.read_csv('data/corporation_code.csv')
 
 def new_rss(date_tracker):
@@ -23,8 +22,8 @@ def new_rss(date_tracker):
     url = "http://dart.fss.or.kr/api/todayRSS.xml"
     fp = feedparser.parse(url)
     ret = []
-
-    log_helper.status_checker(__name__, '300')
+    logger = logging.getLogger(__name__)
+    mLog.status_checker(__name__, fp.status)
 
     # RSS에 공급계약체결이 없을 시,
     # entry 가장 최근 공시가 위, 내림차순
@@ -32,7 +31,7 @@ def new_rss(date_tracker):
     for e in fp.entries:
         if(parse(e.published) <= date_tracker):         # compare date to get new feed
             break
-        entry_tuple = (e.title, e.link, parse(e.published),e.author)
+        entry_tuple = (e.title, e.link, parse(e.published), e.author)
         ret.append(entry_tuple)
 
     logger.info("Checking RSS - new feed(s): " + str(len(ret)))
@@ -51,11 +50,12 @@ def corp_to_code(corpname):
     """
 
     code = ""
+    logger = logging.getLogger(__name__)
 
     try:
         code = str(corporation[corporation['회사명'] == corpname]['종목코드'].values[0].item())
         code = '0' * (6 - len(code)) + code
     except IndexError:
-        logging.warning("Corporation code cannot be found. Corporation name: {}".format(corpname))
+        logger.warning("Corporation code cannot be found. Corporation name: {}".format(corpname))
 
     return code

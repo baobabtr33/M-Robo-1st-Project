@@ -3,10 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 import traceback
 from datetime import datetime, timedelta
-import log_helper
+import mLog
 import logging.config
-
-logger = logging.getLogger(__name__)
 
 def parse_naver_page(code, page):
     """
@@ -24,7 +22,8 @@ def parse_naver_page(code, page):
     url = 'http://finance.naver.com/item/sise_day.nhn?code={code}&page={page}'.format(code=code, page=page)
     res = requests.get(url)
 
-    log_helper(res.status_code)
+    # TODO: 반환된 status에 문제가 있다면 해결방안
+    mLog.status_checker(__name__, res.status_code)
 
     soup = BeautifulSoup(res.text, 'lxml')
     df = pd.read_html(str(soup.find("table")), header=0)[0]
@@ -67,15 +66,22 @@ def crawl_stock(corporation_code):
     res = requests.get(url)
     res.encoding = 'utf-8'
     soup = BeautifulSoup(res.text, 'lxml')
+    logger = logging.getLogger(__name__)
 
-    log_helper.status_checker(__name__, res.status)
+    mLog.status_checker(__name__, res.status_code)
 
     # get date range for 3 months
     minus_90_days = datetime.today() - timedelta(days=90)
     str_datefrom = datetime.strftime(minus_90_days, '%Y.%m.%d')
-
     df = None
-    pg_last = get_pg_last(soup)
+    try:
+        pg_last = get_pg_last(soup)
+
+    except AttributeError:
+        logger = logging.getLogger(__name__)
+        logger.warning(
+            "Cannot find stock information for corporation code {} from NAVER Finance".format(corporation_code))
+        return
 
     # traverse through needed pages to collect data
     for page in range(1, pg_last+1):
