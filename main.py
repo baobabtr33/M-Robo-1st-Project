@@ -19,15 +19,12 @@ def main(argv):
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('path', type=str,
                             help="Chrome Driver Path must be given")
-    arg_parser.add_argument('state', type=str,
-                            help="Need to choose \"test\" or  \"service\" for the project")
+    #arg_parser.add_argument('state', type=str,
+    #                        help="Need to choose \"test\" or  \"service\" for the project")
     args = arg_parser.parse_args()
 
-    if args.state == "test" or args.state == "service":
-        logger.info("Starting program: service")
-        service_ver(args.path)
-    else:
-        print("Please choose which version to use (\"test\" or  \"service\")")
+    logger.info("Starting program: service")
+    service_ver(args.path)
 
 
 def service_ver(my_driver_path):
@@ -92,12 +89,5 @@ if __name__ == "__main__":
     # 로그 생성
     logging.config.fileConfig('logging.conf')
     logger = logging.getLogger(__name__)
-
-    # 'application' code
-    logger.debug('debug message')
-    logger.info('info message')
-    logger.warning('warn message')
-    logger.error('error message')
-    logger.critical('critical message')
 
     main(sys.argv[1:])
