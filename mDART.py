@@ -57,7 +57,7 @@ def dart_crawling(my_driver_path, url):
 
     except WebDriverException:
         logger = logging.getLogger(__name__)
-        logging.warning("Message: 'chromedriver.exe' executable needs to be in PATH. Please see https://sites.google.com/a/chromium.org/chromedriver/home")
+        logger.warning("Message: 'chromedriver.exe' executable needs to be in PATH. Please see https://sites.google.com/a/chromium.org/chromedriver/home")
         exit()
 
 
@@ -86,7 +86,7 @@ def dart_preprocess(DART_df):
 
     else:
         logger = logging.getLogger(__name__)
-        logging.warning("Fetching Wrong Table")
+        logger.warning("Fetching Wrong Table")
         return None
 
     return DART_preprocess_df
