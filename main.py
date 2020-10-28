@@ -44,6 +44,8 @@ def service_ver(my_driver_path):
             if "단일판매ㆍ공급계약체결" in RSS_info[0] and not "정정" in RSS_info[0]:
                 # RSS_info composition
                 # 0. title 1. link 2. datetime 3. creator
+                logger.debug("Title : {} Link : {} Datetime : {} Creator : {}".format(RSS_info[0], RSS_info[1],
+                                                                                      RSS_info[2], RSS_info[3]))
                 logger.info("Target Filing: " + RSS_info[3] + " " + RSS_info[0])
 
                 corp_code = RSS.corp_to_code(RSS_info[3])
