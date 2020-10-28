@@ -28,23 +28,24 @@ def draw_stock_chart(df, corpname, filing_num):
     font_path = 'data/kor_font/NanumBarunGothic.ttf'
     fontprop = fm.FontProperties(fname=font_path, size=10)
 
-
     # make plot
     register_matplotlib_converters()
     date_series = pd.to_datetime(series_df.index)
     plt.plot(date_series, series_df['종가'])
-    plt.xlabel("날짜(일)",fontproperties=fontprop, loc = "right")
-    plt.ylabel("주가(원)",fontproperties=fontprop, rotation = "horizontal", loc = "top")
-    plt.title(corpname + ", 최근 3개월",fontproperties=fontprop, loc = "right")
-    plt.grid(True) # 그리드
-    plt.xticks(series_df.index[::7],series_df.index[::7], rotation=45, ha="right")  #ha 로 tick에 맞춘다. / 7일에 한 번 tick label
-    file_save = 'db/chart/'+ filing_num + '-chart.png'
+    plt.xlabel("날짜(일)", fontproperties=fontprop, loc="right")
+    plt.ylabel("주가(원)", fontproperties=fontprop, rotation="horizontal", loc="top")
+    plt.title(corpname + ", 최근 3개월", fontproperties=fontprop, loc="right")
+    plt.grid(True)  # 그리드
+    plt.xticks(series_df.index[::7], series_df.index[::7], rotation=45,
+               ha="right")                                              # ha 로 tick에 맞춘다. / 7일에 한 번 tick label
+    file_save = 'db/chart/' + filing_num + '-chart.png'
     plt.savefig(file_save, bbox_inches='tight')
 
-    #erase
+    # erase tmp files
     plt.clf()
 
     return file_save
+
 
 def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1_num, comp2_num):
     """
@@ -62,22 +63,22 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
         file_save : 저장한 위치, 파일명을 반환
     """
     # set data for plot
-    comp1_num = int(re.search(r'\d+', comp1_num).group()) # to int
+    comp1_num = int(re.search(r'\d+', comp1_num).group())  # to int
     comp2_num = int(re.search(r'\d+', comp2_num).group())
-    comp1_num = comp1_num / math.pow(10,8) # 억단위로
-    comp2_num = comp2_num / math.pow(10,8)
+    comp1_num = comp1_num / math.pow(10, 8)  # 억단위로
+    comp2_num = comp2_num / math.pow(10, 8)
 
     # define axis and labels
     y_axis = [str(comp1_name), str(comp2_name)]
-    x_axis = [float("{:.2f}".format(comp1_num)),float("{:.2f}".format(comp2_num))]
+    x_axis = [float("{:.2f}".format(comp1_num)), float("{:.2f}".format(comp2_num))]
     y_pos = np.arange(len(y_axis))
 
     # Create horizontal bar plot
-    bars = plt.barh(y_pos, x_axis, height = 0.5)
+    bars = plt.barh(y_pos, x_axis, height=0.5)
     font_path = 'data/kor_font/NanumBarunGothic.ttf'
     fontprop = fm.FontProperties(fname=font_path, size=10)
-    plt.title('단위 : 억 원', loc='right', fontsize = 10, fontproperties = fontprop)
-    plt.title(chart_title, fontproperties = fontprop, fontsize = 15)
+    plt.title('단위 : 억 원', loc='right', fontsize=10, fontproperties=fontprop)
+    plt.title(chart_title, fontproperties=fontprop, fontsize=15)
 
     # Create labels on the y-axis
     plt.yticks(y_pos, y_axis)
@@ -86,9 +87,9 @@ def draw_comparison_chart(chart_title, filing_num, comp1_name, comp2_name, comp1
         label.set_fontproperties(fontprop)
 
     # save plot
-    file_save = 'db/chart/'+ filing_num + '-bar.png'
+    file_save = 'db/chart/' + filing_num + '-bar.png'
     plt.savefig(file_save, bbox_inches='tight')
-    
+
     # clear data
     plt.clf()
 

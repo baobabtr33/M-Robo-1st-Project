@@ -17,4 +17,3 @@ def status_checker(name, status):
             exit()
         else:
             logger.INFO("Something is wrong with RSS request. Status Code: {}".format(status))
-            # continue

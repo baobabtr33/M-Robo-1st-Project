@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import mLog
 import logging.config
 
+
 def parse_naver_page(code, page):
     """
     네이버 페이지 주식 데이터 파싱
@@ -84,7 +85,7 @@ def crawl_stock(corporation_code):
         return
 
     # traverse through needed pages to collect data
-    for page in range(1, pg_last+1):
+    for page in range(1, pg_last + 1):
         _df = parse_naver_page(corporation_code, page)
         _df_filtered = _df[_df['날짜'] > str_datefrom]
         if df is None:
