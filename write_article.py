@@ -18,7 +18,9 @@ def convert_number(num):
     try :
         result = ""
         num = int(num)
-        if num >= 1000000000000: # 1조
+        if num >= 10000000000000000:
+            result = f"{int(num // 10000000000000000):,}경"
+        elif num >= 1000000000000: # 1조
             result = f"{int(num // 1000000000000):,}조"
         elif num >= 100000000: # 1억
             result = f"{int(num // 100000000):,}억"
@@ -26,7 +28,8 @@ def convert_number(num):
             result = f" {int(num // 10000):,}만"
         elif num >= 1: # 1
             result = f" {int(num):,}"
-
+        elif num == 0 :
+            result = "0"
     except :
         logger.debug("convert_number: Fail to convert money unit")
 
