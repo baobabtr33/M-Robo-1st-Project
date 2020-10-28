@@ -89,9 +89,9 @@ class EmailSender:
            str_to_email_addrs : 수신자 리스트
         """
 
-        cc = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
-        self.ss.send_message(cc, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
-        del cc
+        EmailContent = EmailHTMLImageContent.get_message(str_from_email_addr, str_to_email_addrs)
+        self.ss.send_message(EmailContent, from_addr=str_from_email_addr, to_addrs=str_to_email_addrs)
+        del EmailContent
 
 
 def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen, chart_file, str_from_email_addr, str_to_email_addrs):
@@ -110,34 +110,35 @@ def Sending_Final_Email(link, title, first_sen, second_sen, third_sen, final_sen
     return:
         이메일 보냄
     """
-
-    template = Template("""<html>
-                                <head></head>
-                                <body>
-                                    <img src="cid:chart"><br>
-                                    ${first_sen} <br>
-                                    ${second_sen} <br>
-                                    ${third_sen} <br>
-                                    ${final_sen} <br>
-                                    <a href= S{link}>
-                                    공시전문으로 이동
-                                    </a> <br>
-                                    <img src="cid:bar"><br>
-                                    </a><br>
-                                </body>
-                            </html>""")
-
-
-    emailHTMLImageContent = EmailHTMLImageContent(str_subject=title, str_image_file_name1=chart_file[0],
-                                                str_cid_name1='chart', str_image_file_name2=chart_file[1],
-                                                str_cid_name2='bar', template=template,
-                                                template_params= {'first_sen': first_sen, 'second_sen': second_sen,
-                                                'third_sen': third_sen, 'final_sen': final_sen,
-                                                'link': link} )
-
-    emailsender= EmailSender()
-    emailsender.send_message(EmailHTMLImageContent=emailHTMLImageContent, str_from_email_addr=str_from_email_addr,
-                             str_to_email_addrs=str_to_email_addrs)
+    try:
+        template = Template("""<html>
+                                    <head></head>
+                                    <body>
+                                        <img src="cid:chart"><br>
+                                        ${first_sen} <br>
+                                        ${second_sen} <br>
+                                        ${third_sen} <br>
+                                        ${final_sen} <br>
+                                        <a href= S{link}>
+                                        공시전문으로 이동
+                                        </a> <br>
+                                        <img src="cid:bar"><br>
+                                        </a><br>
+                                    </body>
+                                </html>""")
 
 
+        emailHTMLImageContent = EmailHTMLImageContent(str_subject=title, str_image_file_name1=chart_file[0],
+                                                    str_cid_name1='chart', str_image_file_name2=chart_file[1],
+                                                    str_cid_name2='bar', template=template,
+                                                    template_params= {'first_sen': first_sen, 'second_sen': second_sen,
+                                                    'third_sen': third_sen, 'final_sen': final_sen,
+                                                    'link': link} )
 
+        emailsender= EmailSender()
+        emailsender.send_message(EmailHTMLImageContent=emailHTMLImageContent, str_from_email_addr=str_from_email_addr,
+                                 str_to_email_addrs=str_to_email_addrs)
+
+
+    except:
+        logger.debug("Sending_Final_Email: Fail to sending email")
