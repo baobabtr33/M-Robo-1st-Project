@@ -86,7 +86,7 @@ def first_third_sentence(DART_preprocess_df, RSS_info):
         first_sen = hgtk.josa.attach(corp, hgtk.josa.EUN_NEUN) + ' ' + hgtk.josa.attach(partner, hgtk.josa.GWA_WA) + ' ' + contract_price+'원' + ' 규모의 계약을 체결했다고 ' + str(RSS_info[2].day) + '일에 공시했다.'
 
         #세번쨰 문장
-        third_sen = '계약규모는 ' + contract_price+'원으로 최근 매출액인 ' + recent_sales + ' 대비 ' + diff + '% 수준이다'
+        third_sen = '계약규모는 ' + contract_price+'원으로 최근 매출액인 ' + recent_sales + ' 대비 ' + diff + '% 수준이다.'
     except :
         logger = logging.getLogger(__name__)
         logger.error("first_third_sentence: Fail to write 1st&3rd Sentence")
